@@ -38,14 +38,14 @@ const Hero = () => {
             <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-base rounded-xl shadow-glow" onClick={() => window.location.href = '/jobs'}>
               {SITE_CONFIG.hero?.primaryCTA ?? "Explore Updates"}
             </Button>
-            {/*
+            
             <Button
-              variant="outline"
+              variant="outline" onClick={() => window.location.href = '/courses'}
               className="border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white px-8 py-6 text-base rounded-xl"
             >
               {SITE_CONFIG.hero?.secondaryCTA ?? "Browse Courses"}
             </Button>
-            */}
+            
           </div>
         </div>
 

@@ -5,6 +5,9 @@ substitutions:
   _IMAGE: udaanpath
   _SERVICE: udaanpath-web
 
+options:
+  logging: CLOUD_LOGGING_ONLY   # ✅ FIX ADDED
+
 steps:
   # 1️⃣ Build Docker image
   - name: "gcr.io/cloud-builders/docker"
@@ -18,7 +21,7 @@ steps:
         "."
       ]
 
-  # 2️⃣ Push images
+  # 2️⃣ Push image
   - name: "gcr.io/cloud-builders/docker"
     args:
       [

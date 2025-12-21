@@ -6,10 +6,12 @@ substitutions:
   _SERVICE: udaanpath-web
 
 options:
-  logging: CLOUD_LOGGING_ONLY   # ✅ FIX ADDED
+  logging: CLOUD_LOGGING_ONLY
 
 steps:
+  # ===============================
   # 1️⃣ Build Docker image
+  # ===============================
   - name: "gcr.io/cloud-builders/docker"
     args:
       [
@@ -21,7 +23,9 @@ steps:
         "."
       ]
 
+  # ===============================
   # 2️⃣ Push image
+  # ===============================
   - name: "gcr.io/cloud-builders/docker"
     args:
       [
@@ -36,17 +40,61 @@ steps:
         "${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:latest"
       ]
 
-  # 3️⃣ Deploy to Cloud Run
+  # ===============================
+  # 3️⃣ Deploy to Cloud Run (WITH ENV VARS)
+  # ===============================
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: gcloud
     args:
       [
         "run", "deploy", "${_SERVICE}",
-        "--image", "${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:${SHORT_SHA}",
+
+        "--image",
+        "${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:${SHORT_SHA}",
+
         "--region", "${_REGION}",
         "--platform", "managed",
         "--allow-unauthenticated",
-        "--port", "3000"
+        "--port", "3000",
+
+        "--set-env-vars",
+        "NODE_ENV=production",
+
+        "--set-env-vars",
+        "INTERNAL_API_BASE_URL=https://udaanpath.com",
+
+        "--set-env-vars",
+        "INTERNAL_API_TOKEN=internal-master-koendfewn23n23n23n23n23n23",
+
+        "--set-env-vars",
+        "EXTERNAL_AUTH_BASE_URL=https://udaanpath-web-333176137178.us-central1.run.app/api",
+
+        "--set-env-vars",
+        "EXTERNAL_AUTH_MASTER_TOKEN=master-feb94420ff1444c78697cee82c6a4b7d",
+
+        "--set-env-vars",
+        "DB_HOST=itsiksha-db.c7k2cwoo4963.ap-south-1.rds.amazonaws.com",
+
+        "--set-env-vars",
+        "DB_USER=admin",
+
+        "--set-env-vars",
+        "DB_PASS=SdKVande007*AWSSQL25",
+
+        "--set-env-vars",
+        "DB_NAME=itsiksha",
+
+        "--set-env-vars",
+        "DB_PORT=3306",
+
+        "--set-env-vars",
+        "NEXT_PUBLIC_ADSENSE_CLIENT_ID=ca-pub-5566458360910453",
+
+        "--set-env-vars",
+        "NEXT_PUBLIC_GA_ID=G-7TZ5S25XCX",
+
+        "--set-env-vars",
+        "NEXT_PUBLIC_GTM_ID=GTM-57X2R4PM"
       ]
 
 images:

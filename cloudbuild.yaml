@@ -1,48 +1,50 @@
 substitutions:
+  _PROJECT: sdkorg
   _REGION: us-central1
-  _SERVICE: udaanpath-web
   _REPO: udaanpath-repo
   _IMAGE: udaanpath
-  _PROJECT: sdkorg
+  _SERVICE: udaanpath-web
 
 steps:
-  # Build container
+  # 1️⃣ Build Docker image
   - name: "gcr.io/cloud-builders/docker"
     args:
-      - "build"
-      - "-t"
-      - "${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:${SHORT_SHA}"
-      - "-t"
-      - "${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:latest"
-      - "."
+      [
+        "build",
+        "-t",
+        "${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:${SHORT_SHA}",
+        "-t",
+        "${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:latest",
+        "."
+      ]
 
-  # Push tags
+  # 2️⃣ Push images
   - name: "gcr.io/cloud-builders/docker"
     args:
-      - "push"
-      - "${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:${SHORT_SHA}"
+      [
+        "push",
+        "${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:${SHORT_SHA}"
+      ]
 
   - name: "gcr.io/cloud-builders/docker"
     args:
-      - "push"
-      - "${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:latest"
+      [
+        "push",
+        "${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:latest"
+      ]
 
-  # Deploy to Cloud Run
+  # 3️⃣ Deploy to Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
-    entrypoint: "gcloud"
+    entrypoint: gcloud
     args:
-      - "run"
-      - "deploy"
-      - "${_SERVICE}"
-      - "--image"
-      - "${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:${SHORT_SHA}"
-      - "--region"
-      - "${_REGION}"
-      - "--platform"
-      - "managed"
-      - "--allow-unauthenticated"
-      - "--port"
-      - "3000"
+      [
+        "run", "deploy", "${_SERVICE}",
+        "--image", "${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:${SHORT_SHA}",
+        "--region", "${_REGION}",
+        "--platform", "managed",
+        "--allow-unauthenticated",
+        "--port", "3000"
+      ]
 
 images:
   - "${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:${SHORT_SHA}"

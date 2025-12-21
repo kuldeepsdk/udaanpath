@@ -9,9 +9,7 @@ export default function HomePage(){
   return(
     <div>
       <Hero />
-
       <Stats />
-      
       <Features />
     </div>
   );

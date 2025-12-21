@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Important pages
+Allow: /jobs
+Allow: /jobs/*
+Allow: /results
+Allow: /admit-card
+Allow: /admission
+
+# Block admin & internal
+Disallow: /secure-console/
+Disallow: /api/
+Disallow: /_next/
+
+# Sitemap
+Sitemap: https://udaanpath.com/sitemap.xml

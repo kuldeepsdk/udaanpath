@@ -1,6 +1,7 @@
 export default function JobPosterJob({ job }: { job: any }) {
   return (
-    <div className="h-[1350px] bg-gradient-to-br from-fuchsia-700 via-purple-700 to-indigo-700 text-white p-10 relative overflow-hidden">
+    <div className=" w-[1080px] h-[1350px] bg-gradient-to-br from-fuchsia-700 via-purple-700 to-indigo-700 text-white p-10 relative overflow-hidden">
+
 
       {/* Decorative Background Blobs */}
       <div className="absolute -top-40 -right-40 w-[520px] h-[520px] bg-white/10 rounded-full blur-3xl" />

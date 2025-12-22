@@ -8,22 +8,37 @@ export default function JobPosterClient({ job }: { job: any }) {
   const posterRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
 
-  async function generatePoster() {
+  /* ========================
+     DEVICE DETECTION
+  ======================== */
+  function isIOS() {
+    if (typeof navigator === "undefined") return false;
+    return /iPad|iPhone|iPod/.test(navigator.userAgent);
+  }
+
+  /* ========================
+     POSTER GENERATION
+  ======================== */
+  async function generatePoster(): Promise<string | null> {
     if (!posterRef.current) return null;
     setLoading(true);
 
     try {
-      const dataUrl = await toPng(posterRef.current, {
+      return await toPng(posterRef.current, {
         pixelRatio: 2,
-        quality: 1,
         cacheBust: true,
       });
-      return dataUrl;
+    } catch (err) {
+      console.error("Poster generation failed", err);
+      return null;
     } finally {
       setLoading(false);
     }
   }
 
+  /* ========================
+     DOWNLOAD (ALL DEVICES)
+  ======================== */
   async function downloadPoster() {
     const dataUrl = await generatePoster();
     if (!dataUrl) return;
@@ -31,25 +46,73 @@ export default function JobPosterClient({ job }: { job: any }) {
     const link = document.createElement("a");
     link.href = dataUrl;
     link.download = `${job.slug}-udaanpath.png`;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   }
 
+  /* ========================
+     COPY (NON-iOS ONLY)
+  ======================== */
   async function copyPoster() {
     const dataUrl = await generatePoster();
     if (!dataUrl) return;
 
-    const blob = await (await fetch(dataUrl)).blob();
-    await navigator.clipboard.write([
-      new ClipboardItem({ [blob.type]: blob }),
-    ]);
+    try {
+      const blob = await (await fetch(dataUrl)).blob();
 
-    alert("Poster copied to clipboard ✅");
+      if (
+        navigator.clipboard &&
+        typeof ClipboardItem !== "undefined"
+      ) {
+        await navigator.clipboard.write([
+          new ClipboardItem({ [blob.type]: blob }),
+        ]);
+        alert("Poster copied to clipboard ✅");
+      }
+    } catch (err) {
+      console.warn("Copy not supported", err);
+    }
   }
+
+  /* ========================
+     SHARE (NON-iOS ONLY)
+  ======================== */
+  async function sharePoster() {
+    const dataUrl = await generatePoster();
+    if (!dataUrl) return;
+
+    try {
+      const blob = await (await fetch(dataUrl)).blob();
+      const file = new File(
+        [blob],
+        `${job.slug}-udaanpath.png`,
+        { type: "image/png" }
+      );
+
+      if (navigator.share) {
+        await navigator.share({
+          title: job.title,
+          text: "UdaanPath – Latest Sarkari Job",
+          files: [file],
+        });
+      }
+    } catch (err) {
+      console.warn("Share not supported", err);
+    }
+  }
+
+  /* ========================
+     UI
+  ======================== */
+  const isiPhone = isIOS();
 
   return (
     <>
-      {/* ===== Buttons ===== */}
+      {/* ===== ACTION BUTTONS ===== */}
       <div className="flex flex-wrap gap-3">
+
+        {/* Download → Always visible */}
         <button
           onClick={downloadPoster}
           disabled={loading}
@@ -58,22 +121,49 @@ export default function JobPosterClient({ job }: { job: any }) {
           {loading ? "Generating..." : "📥 Download Poster"}
         </button>
 
-        <button
-          onClick={copyPoster}
-          disabled={loading}
-          className="px-4 py-2 rounded-xl bg-slate-900 text-white text-sm disabled:opacity-60"
-        >
-          {loading ? "Generating..." : "📋 Copy Poster"}
-        </button>
+        {/* Copy → NOT for iPhone */}
+        {!isiPhone && (
+          <button
+            onClick={copyPoster}
+            disabled={loading}
+            className="px-4 py-2 rounded-xl bg-slate-900 text-white text-sm disabled:opacity-60"
+          >
+            {loading ? "Generating..." : "📋 Copy Poster"}
+          </button>
+        )}
+
+        {/* Share → NOT for iPhone */}
+        {!isiPhone && (
+          <button
+            onClick={sharePoster}
+            disabled={loading}
+            className="px-4 py-2 rounded-xl bg-green-600 text-white text-sm disabled:opacity-60"
+          >
+            {loading ? "Generating..." : "📤 Share Poster"}
+          </button>
+        )}
+
       </div>
 
-      {/* ===== HIDDEN POSTER (THIS IS KEY) ===== */}
+      {/* ===== iPhone Helper Text ===== */}
+      {isiPhone && (
+        <p className="mt-2 text-xs text-slate-500">
+          iPhone users: Download poster, then use Share from Photos app.
+        </p>
+      )}
+
+      {/* ===== HIDDEN POSTER RENDER ===== */}
       <div
         aria-hidden
         className="fixed inset-0 pointer-events-none opacity-0"
       >
-        <div ref={posterRef}>
-          {/* 🔥 THIS decides the design */}
+        <div
+          ref={posterRef}
+          style={{
+            width: "1080px",
+            height: "1350px",
+          }}
+        >
           <PosterRenderer job={job} />
         </div>
       </div>

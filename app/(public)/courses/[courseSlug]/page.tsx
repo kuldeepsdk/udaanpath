@@ -12,7 +12,6 @@ export default async function CourseDetailPage({
   const { chapter } = await searchParams;
 
   const response = await fetchCourseDetail(courseSlug, chapter);
-
   const { course, chapters, currentChapter, chapterContent } = response;
 
   const currentIndex = chapters.findIndex(
@@ -23,13 +22,13 @@ export default async function CourseDetailPage({
   const nextChapter = chapters[currentIndex + 1];
 
   return (
-    <div className="bg-slate-50 min-h-screen">
+    <div className="bg-slate-50 min-h-screen relative">
+
       {/* =====================
-         COURSE HERO HEADER
+         HERO HEADER
       ====================== */}
       <section className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-          {/* Thumbnail */}
+        <div className="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-12 gap-6 items-center">
           {course.thumbnail_base64 && (
             <div className="md:col-span-4">
               <img
@@ -44,7 +43,6 @@ export default async function CourseDetailPage({
             </div>
           )}
 
-          {/* Course Info */}
           <div className="md:col-span-8 space-y-3">
             <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
               Free Course
@@ -69,123 +67,132 @@ export default async function CourseDetailPage({
       </section>
 
       {/* =====================
-         MAIN CONTENT
+         FLOATING CHAPTER BUTTON
+      ====================== */}
+      <a
+        href="#chapters"
+        className="fixed top-28 left-4 z-40 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow-lg text-sm font-semibold"
+      >
+        📚 Chapters
+      </a>
+
+      {/* =====================
+         MAIN CONTENT (FULL WIDTH)
       ====================== */}
       <section className="max-w-7xl mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* ========== CHAPTER SIDEBAR (COLLAPSIBLE) ========== */}
-          <aside className="lg:col-span-4 xl:col-span-3">
-            <details
-              open
-              className="bg-white rounded-2xl border shadow-sm overflow-hidden"
-            >
-              <summary className="cursor-pointer px-5 py-4 border-b font-semibold text-slate-800 flex justify-between items-center">
-                Course Chapters
-                <span className="text-xs text-slate-400">
-                  Toggle
-                </span>
-              </summary>
+        <main>
+          <div className="bg-white rounded-2xl border shadow-sm p-6 min-h-[500px]">
 
-              <ul className="divide-y">
-                {chapters.map((ch: any, index: number) => {
-                  const active = ch.uuid === currentChapter?.uuid;
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4">
+              {currentChapter?.title}
+            </h2>
 
-                  return (
-                    <li key={ch.uuid}>
-                      <Link
-                        href={`?chapter=${ch.uuid}`}
-                        className={`block px-5 py-3 text-sm transition ${
-                          active
-                            ? "bg-blue-50 text-blue-700 font-medium"
-                            : "hover:bg-slate-50 text-slate-700"
-                        }`}
-                      >
-                        <span className="block text-xs text-slate-400 mb-1">
-                          Chapter {index + 1}
-                        </span>
-                        {ch.title}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </details>
-          </aside>
-
-          {/* ========== CONTENT AREA ========== */}
-          <main className="lg:col-span-8 xl:col-span-9">
-            <div className="bg-white rounded-2xl border shadow-sm p-6 min-h-[500px]">
-              {/* Chapter title */}
-              <h2 className="text-2xl font-semibold text-slate-900 mb-4">
-                {currentChapter?.title}
-              </h2>
-
-              {/* Video */}
-              {chapterContent?.video_url && (
-                <div className="mb-6 aspect-video rounded-xl overflow-hidden border">
-                  <iframe
-                    src={chapterContent.video_url}
-                    className="w-full h-full"
-                    allowFullScreen
-                  />
-                </div>
-              )}
-
-              {/* HTML Content */}
-              {chapterContent?.content_html ? (
-                <div
-                  className="prose max-w-none prose-slate"
-                  dangerouslySetInnerHTML={{
-                    __html: chapterContent.content_html,
-                  }}
+            {chapterContent?.video_url && (
+              <div className="mb-6 aspect-video rounded-xl overflow-hidden border">
+                <iframe
+                  src={chapterContent.video_url}
+                  className="w-full h-full"
+                  allowFullScreen
                 />
-              ) : (
-                <p className="text-slate-500">
-                  No content available for this chapter.
-                </p>
-              )}
-
-              {/* Notes */}
-              {chapterContent?.notes_pdf && (
-                <div className="mt-8">
-                  <a
-                    href={chapterContent.notes_pdf}
-                    target="_blank"
-                    className="inline-flex items-center text-blue-600 font-medium hover:underline"
-                  >
-                    📄 Download Notes (PDF)
-                  </a>
-                </div>
-              )}
-
-              {/* =====================
-                 CHAPTER NAVIGATION
-              ====================== */}
-              <div className="mt-10 flex flex-col sm:flex-row justify-between gap-4">
-                {prevChapter ? (
-                  <Link
-                    href={`?chapter=${prevChapter.uuid}`}
-                    className="px-5 py-3 rounded-xl border bg-white hover:bg-slate-50 text-slate-700 text-sm font-medium"
-                  >
-                    ← Previous Chapter
-                  </Link>
-                ) : (
-                  <div />
-                )}
-
-                {nextChapter && (
-                  <Link
-                    href={`?chapter=${nextChapter.uuid}`}
-                    className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium"
-                  >
-                    Next Chapter →
-                  </Link>
-                )}
               </div>
+            )}
+
+            {chapterContent?.content_html ? (
+              <div
+                className="prose max-w-none prose-slate"
+                dangerouslySetInnerHTML={{
+                  __html: chapterContent.content_html,
+                }}
+              />
+            ) : (
+              <p className="text-slate-500">
+                No content available for this chapter.
+              </p>
+            )}
+
+            {chapterContent?.notes_pdf && (
+              <div className="mt-8">
+                <a
+                  href={chapterContent.notes_pdf}
+                  target="_blank"
+                  className="inline-flex items-center text-blue-600 font-medium hover:underline"
+                >
+                  📄 Download Notes (PDF)
+                </a>
+              </div>
+            )}
+
+            {/* Chapter Navigation */}
+            <div className="mt-10 flex justify-between gap-4">
+              {prevChapter ? (
+                <Link
+                  href={`?chapter=${prevChapter.uuid}`}
+                  className="px-5 py-3 rounded-xl border bg-white hover:bg-slate-50 text-sm"
+                >
+                  ← Previous
+                </Link>
+              ) : <div />}
+
+              {nextChapter && (
+                <Link
+                  href={`?chapter=${nextChapter.uuid}`}
+                  className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm"
+                >
+                  Next →
+                </Link>
+              )}
             </div>
-          </main>
-        </div>
+
+          </div>
+        </main>
       </section>
+
+      {/* =====================
+         OFF-CANVAS CHAPTER SIDEBAR (PURE CSS)
+      ====================== */}
+      <aside
+        id="chapters"
+        className="fixed top-0 left-0 h-full w-[320px] bg-white shadow-xl z-50 transform -translate-x-full target:translate-x-0 transition-transform duration-300 overflow-y-auto"
+      >
+        <div className="px-5 py-4 border-b flex justify-between items-center">
+          <h3 className="font-semibold text-slate-800">
+            Course Chapters
+          </h3>
+          <a href="#" className="text-slate-500 hover:text-slate-800">
+            ✕
+          </a>
+        </div>
+
+        <ul className="divide-y">
+          {chapters.map((ch: any, index: number) => {
+            const active = ch.uuid === currentChapter?.uuid;
+
+            return (
+              <li key={ch.uuid}>
+                <Link
+                  href={`?chapter=${ch.uuid}`}
+                  className={`block px-5 py-3 text-sm ${
+                    active
+                      ? "bg-blue-50 text-blue-700 font-medium"
+                      : "hover:bg-slate-50 text-slate-700"
+                  }`}
+                >
+                  <span className="block text-xs text-slate-400 mb-1">
+                    Chapter {index + 1}
+                  </span>
+                  {ch.title}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </aside>
+
+      {/* Overlay */}
+      <a
+        href="#"
+        className="fixed inset-0 bg-black/40 z-40 hidden target:block"
+      />
     </div>
   );
 }

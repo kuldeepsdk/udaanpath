@@ -14,6 +14,8 @@ import GTMNoScript from "@/ui/components/analytics/GTMNoScript";
 import { SITE_CONFIG } from "@/config/site";
 
 import { GeistSans, GeistMono } from "geist/font";
+import AdSenseAuto from "@/ui/components/ads/AdSenseAuto";
+
 
 /* =====================================================
    GLOBAL METADATA (WhatsApp / Social Preview Ready)
@@ -104,11 +106,18 @@ export default function RootLayout({
           />
         )}
 
+
+        <Script
+          async
+          strategy="afterInteractive"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5566458360910453"
+          crossOrigin="anonymous"
+        />
         {/* Analytics / GTM */}
         <Analytics />
       </head>
 
-      <body className="bg-slate-50 text-slate-900 antialiased">
+      <body className="bg-slate-50 text-slate-900 antialiased" suppressHydrationWarning>
         {/* GTM noscript (required inside body) */}
         {SITE_CONFIG.analytics.googleTagManager.enabled && <GTMNoScript />}
 
@@ -120,6 +129,8 @@ export default function RootLayout({
 
         {/* Global CTAs & Ads */}
         <WhatsappCTA />
+        <AdSenseAuto />
+
         <RotatingAds />
 
         <Footer />

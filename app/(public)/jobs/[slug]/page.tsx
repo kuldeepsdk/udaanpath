@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { fetchJobDetail } from "@/app/actions/jobs.detail.action";
 import { SITE_CONFIG } from "@/config/site";
+import JobPosterClient from "@/ui/components/job/JobPosterClient";
 
 
 
@@ -115,6 +116,8 @@ export default async function JobDetailPage({
           >
             📲 Share on WhatsApp
           </a>
+
+          <JobPosterClient job={job} />
         </div>
 
         {/* ---------- Notification Image ---------- */}

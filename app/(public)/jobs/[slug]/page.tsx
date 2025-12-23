@@ -66,167 +66,251 @@ export default async function JobDetailPage({
   };
 
   return (
-    <>
-      {/* ================= SCHEMA ================= */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+  <>
+    {/* ================= SCHEMA ================= */}
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }}
+    />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+    />
 
-      {/* ================= PAGE ================= */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-10">
+    {/* ================= PAGE ================= */}
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-12">
 
-        {/* ---------- Breadcrumb ---------- */}
-        <nav className="text-sm text-slate-500">
-          <Link href="/jobs" className="hover:underline">
-            Jobs
-          </Link>{" "}
-          / {job.title}
-        </nav>
+      {/* ---------- Breadcrumb ---------- */}
+      <nav className="text-sm text-slate-500">
+        <Link href="/jobs" className="hover:underline">Jobs</Link>
+        <span className="mx-2">/</span>
+        <span className="text-slate-700">{job.title}</span>
+      </nav>
 
-        {/* ---------- Header ---------- */}
-        <div className="bg-white border rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
-          <span
-            className={`inline-block text-xs px-3 py-1 rounded-full ${badgeClass(
-              job.category
-            )}`}
-          >
-            {labelForCategory(job.category)}
-          </span>
+      {/* ================= HERO ================= */}
+      <section className="relative bg-white border rounded-3xl p-6 sm:p-10 shadow-lg space-y-6">
 
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug">
-            {job.title}
-          </h1>
+        {/* Badge */}
+        <span className={`inline-block text-xs px-3 py-1 rounded-full ${badgeClass(job.category)}`}>
+          {labelForCategory(job.category)}
+        </span>
 
-          {job.organization && (
-            <p className="text-sm text-slate-600">{job.organization}</p>
+        {/* Title */}
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight">
+          {job.title}
+        </h1>
+
+        {/* Org */}
+        {job.organization && (
+          <p className="text-slate-600 text-sm">
+            Conducted by <span className="font-medium">{job.organization}</span>
+          </p>
+        )}
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
+          <Stat label="Vacancies" value={job.total_posts?.toLocaleString() || "—"} />
+          <Stat label="Qualification" value={job.qualification || "—"} />
+          <Stat label="Salary" value={job.salary || "—"} />
+          <Stat label="Age Limit" value={job.age_limit || "—"} />
+        </div>
+
+        {/* CTA */}
+        <div className="flex flex-wrap gap-3 pt-4">
+          {job.apply_link && (
+            <a
+              href={job.apply_link}
+              target="_blank"
+              className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700"
+            >
+              🚀 Apply Online
+            </a>
           )}
 
-          {/* WhatsApp Share (Top CTA) */}
           <a
-            href={`https://api.whatsapp.com/send/?text=${buildWhatsappMessage(
-              job
-            )}`}
+            href={`https://api.whatsapp.com/send/?text=${buildWhatsappMessage(job)}`}
             target="_blank"
-            className="inline-flex items-center gap-2 text-green-700 text-sm font-medium hover:underline"
+            className="px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700"
           >
             📲 Share on WhatsApp
           </a>
 
           <JobPosterClient job={job} />
         </div>
+      </section>
 
-        {/* ---------- Notification Image ---------- */}
-        {job.notification_image_base64 && (
-          <img
-            src={job.notification_image_base64}
-            alt={job.title}
-            className="w-full rounded-3xl border"
-          />
-        )}
+      {/* ================= IMAGE ================= */}
+      {job.notification_image_base64 && (
+        <img
+          src={job.notification_image_base64}
+          alt={job.title}
+          className="w-full rounded-3xl border shadow"
+        />
+      )}
 
-        {/* ---------- Summary ---------- */}
-        {job.summary && (
-          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 text-sm text-slate-700">
-            {job.summary}
-          </div>
-        )}
+      {/* ================= SUMMARY ================= */}
+      {job.summary && (
+        <section className="bg-gradient-to-r from-blue-50 to-indigo-50 border rounded-2xl p-6 text-slate-700 text-sm leading-relaxed">
+          {job.summary}
+        </section>
+      )}
 
-        {/* ---------- Important Dates ---------- */}
+      {/* ================= GRID ================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+        {/* Important Dates */}
         {dates?.length > 0 && (
-          <Section title="Important Dates">
-            <ul className="divide-y">
-              {dates.map((d: any) => (
-                <li
-                  key={d.id}
-                  className="py-3 flex justify-between text-sm"
-                >
-                  <span>{d.event_label}</span>
-                  <span className="font-medium">
-                    {d.event_date
-                      ? new Date(d.event_date).toLocaleDateString()
-                      : "-"}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </Section>
-        )}
+        <Section title="📅 Important Dates">
+          <ul className="space-y-3">
+            {dates.map((d:any) => (
+              <li
+                key={d.id}
+                className="flex items-center justify-between bg-slate-50 rounded-xl px-4 py-3"
+              >
+                <span className="font-medium">{d.event_label}</span>
+                <span className="text-sm font-semibold text-slate-800">
+                  {new Date(d.event_date).toLocaleDateString()}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
 
-        {/* ---------- Vacancy Breakup ---------- */}
+
+        {/* Vacancy */}
         {vacancy?.length > 0 && (
-          <Section title="Vacancy Details">
-            <table className="w-full text-sm border rounded-xl overflow-hidden">
-              <thead className="bg-slate-50">
-                <tr>
-                  <th className="border px-3 py-2 text-left">Post</th>
-                  <th className="border px-3 py-2 text-right">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {vacancy.map((v: any) => (
-                  <tr key={v.id}>
-                    <td className="border px-3 py-2">{v.post_name}</td>
-                    <td className="border px-3 py-2 text-right">
-                      {v.total_posts}
-                    </td>
+          <Section title="🧾 Vacancy Breakdown">
+
+            {/* Summary */}
+            <div className="mb-4 text-sm text-slate-600">
+              Total Vacancies:{" "}
+              <span className="font-semibold text-slate-900">
+                {vacancy.reduce((s:any, v:any) => s + v.total_posts, 0).toLocaleString()}
+              </span>
+            </div>
+
+            {/* Mobile cards */}
+            <div className="space-y-3 sm:hidden">
+              {vacancy.map((v:any) => (
+                <div
+                  key={v.id}
+                  className="flex justify-between items-center bg-slate-50 rounded-xl px-4 py-3"
+                >
+                  <span className="font-medium">{v.post_name}</span>
+                  <span className="font-bold text-blue-600">
+                    {v.total_posts.toLocaleString()}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop table */}
+            <div className="hidden sm:block overflow-hidden rounded-xl border">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="px-4 py-3 text-left">Post</th>
+                    <th className="px-4 py-3 text-right">Total</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {vacancy.map((v:any) => (
+                    <tr key={v.id} className="border-t">
+                      <td className="px-4 py-3">{v.post_name}</td>
+                      <td className="px-4 py-3 text-right font-semibold">
+                        {v.total_posts.toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
           </Section>
         )}
 
-        {/* ---------- Full Description ---------- */}
-        {job.full_description && (
-          <Section title="Detailed Information">
+      </div>
+
+      {/* ================= Selection Process ================= */}
+      {job.selection_process && (
+        <Section title="🧩 Selection Process">
+
+          {/<[a-z][\s\S]*>/i.test(job.selection_process) ? (
+            // HTML content
             <div
               className="prose prose-slate max-w-none"
               dangerouslySetInnerHTML={{
-                __html: job.full_description,
+                __html: job.selection_process,
               }}
             />
-          </Section>
-        )}
-
-        {/* ---------- Important Links ---------- */}
-        {links?.length > 0 && (
-          <Section title="Important Links">
-            <ul className="space-y-2">
-              {links.map((l: any) => (
-                <li key={l.id}>
-                  <a
-                    href={l.url}
-                    target="_blank"
-                    className="text-blue-600 hover:underline text-sm"
+          ) : (
+            // Plain text (arrow / > / comma based)
+            <ul className="space-y-3">
+              {job.selection_process
+                .split(/>|,|→/g)
+                .map((step: string, idx: number) => (
+                  <li
+                    key={idx}
+                    className="flex items-start gap-3 bg-slate-50 rounded-xl px-4 py-3"
                   >
-                    {l.label || labelForLink(l.link_type)}
-                  </a>
-                </li>
-              ))}
+                    <span className="text-blue-600 font-bold">
+                      {idx + 1}.
+                    </span>
+                    <span className="font-medium text-slate-800">
+                      {step.trim()}
+                    </span>
+                  </li>
+                ))}
             </ul>
-          </Section>
-        )}
-      </div>
+          )}
 
-      {/* ---------- Sticky WhatsApp CTA (Mobile) ---------- */}
-      <div className="fixed bottom-4 left-0 right-0 px-4 sm:hidden z-50">
-        <a
-          href={`https://api.whatsapp.com/send/?text=${buildWhatsappMessage(
-            job
-          )}`}
-          target="_blank"
-          className="flex items-center justify-center gap-2 bg-green-600 text-white py-3 rounded-2xl shadow-lg text-sm font-medium"
-        >
-          📲 Share on WhatsApp
-        </a>
-      </div>
-    </>
-  );
+        </Section>
+      )}
+
+      {/* ================= DESCRIPTION ================= */}
+      {job.full_description && (
+        <Section title="📘 Detailed Information">
+          <div
+            className="prose prose-slate max-w-none"
+            dangerouslySetInnerHTML={{ __html: job.full_description }}
+          />
+        </Section>
+      )}
+
+      {/* ================= LINKS ================= */}
+      {links?.length > 0 && (
+        <Section title="🔗 Important Links">
+          <ul className="space-y-3">
+            {links.map((l: any) => (
+              <li key={l.id}>
+                <a
+                  href={l.url}
+                  target="_blank"
+                  className="block px-4 py-3 bg-slate-50 rounded-lg hover:bg-slate-100 text-blue-600 font-medium"
+                >
+                  {l.label || labelForLink(l.link_type)}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+    </div>
+
+    {/* ================= MOBILE STICKY CTA ================= */}
+    <div className="fixed bottom-4 left-0 right-0 px-4 sm:hidden z-50">
+      <a
+        href={`https://api.whatsapp.com/send/?text=${buildWhatsappMessage(job)}`}
+        target="_blank"
+        className="flex items-center justify-center gap-2 bg-green-600 text-white py-4 rounded-2xl shadow-xl font-semibold"
+      >
+        📲 Share Job on WhatsApp
+      </a>
+    </div>
+  </>
+);
+
 }
 
 /* ================================
@@ -328,4 +412,13 @@ export function buildWhatsappMessage(job: any) {
   );
 
   return encodeURIComponent(lines.join("\n"));
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="bg-slate-50 rounded-xl p-4 text-center">
+      <div className="text-sm text-slate-500">{label}</div>
+      <div className="font-bold text-slate-900 text-lg">{value}</div>
+    </div>
+  );
 }

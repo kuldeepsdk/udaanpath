@@ -3,12 +3,17 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
-  addJobVacancyAction,
-  deleteJobVacancyAction,
+  addJobVacancyBulkAction,
+  deleteJobVacancyBulkAction,
 } from "@/app/actions/admin/jobs.vacancy.action";
 
 type VacancyRow = {
   id: number;
+  post_name: string;
+  total_posts: number;
+};
+
+type DraftVacancy = {
   post_name: string;
   total_posts: number;
 };
@@ -23,48 +28,96 @@ export default function JobVacancyTab({
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
-  const [form, setForm] = useState<{
-    post_name: string;
-    total_posts: string;
-  }>({
+  /* =========================
+     Draft (Temp Add Rows)
+  ========================= */
+  const [draftRows, setDraftRows] = useState<DraftVacancy[]>([]);
+
+  const [form, setForm] = useState({
     post_name: "",
     total_posts: "",
   });
 
-  /* -------------------------
-     Add Vacancy
-  -------------------------- */
-  function handleAdd() {
-    if (!form.post_name || !form.total_posts) {
-      alert("Post name and total posts are required");
-      return;
-    }
+  /* =========================
+     Existing Rows Selection
+  ========================= */
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
+  /* =========================
+     ADD → TEMP ROW
+  ========================= */
+  function handleAddRow() {
     const total = Number(form.total_posts);
-    if (Number.isNaN(total) || total <= 0) {
-      alert("Total posts must be a valid number");
+
+    if (!form.post_name || !Number.isInteger(total) || total <= 0) {
+      alert("Post name and valid total posts required");
       return;
     }
 
-    startTransition(async () => {
-      await addJobVacancyAction(jobId, {
+    setDraftRows((prev) => [
+      ...prev,
+      {
         post_name: form.post_name.trim(),
         total_posts: total,
-      });
+      },
+    ]);
 
-      setForm({ post_name: "", total_posts: "" });
+    setForm({ post_name: "", total_posts: "" });
+  }
+
+  /* =========================
+     REMOVE TEMP ROW
+  ========================= */
+  function removeDraftRow(index: number) {
+    setDraftRows((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  /* =========================
+     SAVE ALL (BULK ADD)
+  ========================= */
+  function handleSaveAll() {
+    if (draftRows.length === 0) return;
+
+    startTransition(async () => {
+      await addJobVacancyBulkAction(jobId, draftRows);
+      setDraftRows([]);
       router.refresh();
     });
   }
 
-  /* -------------------------
-     Delete Vacancy
-  -------------------------- */
-  function handleDelete(id: number) {
-    if (!confirm("Delete this vacancy entry?")) return;
+  /* =========================
+     SELECT EXISTING
+  ========================= */
+  function toggleSelect(id: number) {
+    setSelectedIds((prev) =>
+      prev.includes(id)
+        ? prev.filter((x) => x !== id)
+        : [...prev, id]
+    );
+  }
+
+  function toggleSelectAll() {
+    if (selectedIds.length === vacancy.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(vacancy.map((v) => v.id));
+    }
+  }
+
+  /* =========================
+     DELETE SELECTED (BULK)
+  ========================= */
+  function handleDeleteSelected() {
+    if (selectedIds.length === 0) {
+      alert("No vacancies selected");
+      return;
+    }
+
+    if (!confirm(`Delete ${selectedIds.length} vacancy entries?`)) return;
 
     startTransition(async () => {
-      await deleteJobVacancyAction(jobId, id);
+      await deleteJobVacancyBulkAction(jobId, selectedIds);
+      setSelectedIds([]);
       router.refresh();
     });
   }
@@ -72,7 +125,7 @@ export default function JobVacancyTab({
   return (
     <div className="space-y-8">
 
-      {/* Add vacancy */}
+      {/* ================= ADD NEW ROW ================= */}
       <div className="bg-white border rounded-xl p-6 space-y-4">
         <h3 className="text-lg font-semibold text-slate-800">
           Add Vacancy Breakup
@@ -95,23 +148,93 @@ export default function JobVacancyTab({
           />
         </div>
 
-        <button
-          disabled={pending}
-          onClick={handleAdd}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 disabled:opacity-60"
-        >
-          {pending ? "Saving..." : "Add Vacancy"}
-        </button>
+        <div className="flex gap-3">
+          <button
+            disabled={pending}
+            onClick={handleAddRow}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 disabled:opacity-60"
+          >
+            + Add Row
+          </button>
+
+          <button
+            disabled={pending || draftRows.length === 0}
+            onClick={handleSaveAll}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 disabled:opacity-60"
+          >
+            {pending ? "Saving..." : "Save All"}
+          </button>
+        </div>
       </div>
 
-      {/* Vacancy list */}
+      {/* ================= TEMP ROWS ================= */}
+      {draftRows.length > 0 && (
+        <div className="bg-yellow-50 border rounded-xl overflow-hidden">
+          <div className="px-4 py-3 border-b font-semibold text-sm">
+            Pending Vacancy Rows
+          </div>
+
+          <table className="w-full text-sm">
+            <thead className="bg-yellow-100">
+              <tr>
+                <th className="px-4 py-2 text-left">Post</th>
+                <th className="px-4 py-2 text-left">Total</th>
+                <th className="px-4 py-2 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {draftRows.map((v, i) => (
+                <tr key={i} className="border-b last:border-0">
+                  <td className="px-4 py-2">{v.post_name}</td>
+                  <td className="px-4 py-2">{v.total_posts}</td>
+                  <td className="px-4 py-2 text-right">
+                    <button
+                      onClick={() => removeDraftRow(i)}
+                      className="text-red-600 hover:underline text-sm"
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* ================= EXISTING VACANCY ================= */}
       <div className="bg-white border rounded-xl overflow-hidden">
+        <div className="flex justify-between items-center px-4 py-3 border-b bg-slate-50">
+          <h4 className="text-sm font-semibold">
+            Existing Vacancy Breakup
+          </h4>
+
+          {selectedIds.length > 0 && (
+            <button
+              disabled={pending}
+              onClick={handleDeleteSelected}
+              className="text-red-600 text-sm hover:underline disabled:opacity-50"
+            >
+              Delete Selected ({selectedIds.length})
+            </button>
+          )}
+        </div>
+
         <table className="w-full text-sm">
           <thead className="bg-slate-50 border-b">
             <tr>
+              <th className="px-4 py-3 w-10">
+                <input
+                  type="checkbox"
+                  checked={
+                    vacancy.length > 0 &&
+                    selectedIds.length === vacancy.length
+                  }
+                  onChange={toggleSelectAll}
+                />
+              </th>
               <th className="px-4 py-3 text-left">Post</th>
               <th className="px-4 py-3 text-left">Total Posts</th>
-              <th className="px-4 py-3 text-right">Action</th>
             </tr>
           </thead>
 
@@ -129,20 +252,18 @@ export default function JobVacancyTab({
 
             {vacancy.map((v) => (
               <tr key={v.id} className="border-b last:border-0">
+                <td className="px-4 py-3">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.includes(v.id)}
+                    onChange={() => toggleSelect(v.id)}
+                  />
+                </td>
                 <td className="px-4 py-3 font-medium">
                   {v.post_name}
                 </td>
                 <td className="px-4 py-3">
                   {v.total_posts.toLocaleString()}
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <button
-                    disabled={pending}
-                    onClick={() => handleDelete(v.id)}
-                    className="text-red-600 hover:underline text-sm disabled:opacity-50"
-                  >
-                    Delete
-                  </button>
                 </td>
               </tr>
             ))}
@@ -154,9 +275,9 @@ export default function JobVacancyTab({
   );
 }
 
-/* -------------------------
-   Small UI helper
--------------------------- */
+/* =========================
+   Input Helper
+========================= */
 function Input({
   label,
   value,

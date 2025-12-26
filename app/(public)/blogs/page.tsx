@@ -23,9 +23,9 @@ export default function BlogsPage() {
   async function loadBlogs(p: number) {
     setLoading(true);
     const data = await getBlogs(p);
-    setBlogs(data.blogs);
-    setTotalPages(data.totalPages);
-    setPage(data.page);
+    setBlogs(data.data.blogs);
+    setTotalPages(data.data.totalPages);
+    setPage(data.data.page);
     setLoading(false);
   }
 

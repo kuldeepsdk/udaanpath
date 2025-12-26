@@ -27,7 +27,7 @@ export default function BlogDetail() {
     async function loadBlog() {
       try {
         const data = await getBlogBySlug(slug);
-        setBlog(data);
+        setBlog(data.data);
       } catch {
         setBlog(null);
       }

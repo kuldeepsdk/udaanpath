@@ -19,15 +19,15 @@ export async function generateMetadata(
   }
 
   const siteUrl = "https://udaanpath.com"; // 🔁 change if needed
-  const blogUrl = `${siteUrl}/blogs/${blog.slug}`;
+  const blogUrl = `${siteUrl}/blogs/${blog.data.slug}`;
 
   const description =
-    blog.summary.length > 155
-      ? blog.summary.slice(0, 152) + "..."
-      : blog.summary;
+    blog.data.summary.length > 155
+      ? blog.data.summary.slice(0, 152) + "..."
+      : blog.data.summary;
 
   return {
-    title: `${blog.title} | UdaanPath`,
+    title: `${blog.data.title} | UdaanPath`,
     description,
 
     alternates: {
@@ -35,26 +35,26 @@ export async function generateMetadata(
     },
 
     openGraph: {
-      title: blog.title,
+      title: blog.data.title,
       description,
       url: blogUrl,
       siteName: "UdaanPath",
       type: "article",
       images: [
         {
-          url: `data:image/jpeg;base64,${blog.image_base64}`,
+          url: `data:image/jpeg;base64,${blog.data.image_base64}`,
           width: 1200,
           height: 630,
-          alt: blog.title,
+          alt: blog.data.title,
         },
       ],
     },
 
     twitter: {
       card: "summary_large_image",
-      title: blog.title,
+      title: blog.data.title,
       description,
-      images: [`data:image/jpeg;base64,${blog.image_base64}`],
+      images: [`data:image/jpeg;base64,${blog.data.image_base64}`],
     },
   };
 }

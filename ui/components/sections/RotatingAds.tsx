@@ -16,7 +16,7 @@ const RotatingAds = () => {
     async function loadAds() {
       try {
         const data = await getRotatingAds();
-        setAds(data);
+        setAds(data.data);
       } catch (err) {
         console.error("Failed to load ads", err);
       }

@@ -19,22 +19,27 @@ export default function JobPosterClient({ job }: { job: any }) {
   /* ========================
      POSTER GENERATION
   ======================== */
-  async function generatePoster(): Promise<string | null> {
-    if (!posterRef.current) return null;
-    setLoading(true);
+ async function generatePoster() {
+  if (!posterRef.current) return;
 
-    try {
-      return await toPng(posterRef.current, {
-        pixelRatio: 2,
-        cacheBust: true,
-      });
-    } catch (err) {
-      console.error("Poster generation failed", err);
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }
+  // Force layout calculation
+  const poster = posterRef.current;
+  const finalHeight = poster.scrollHeight;
+
+  poster.style.height = `${finalHeight}px`;
+
+  const dataUrl = await toPng(poster, {
+    pixelRatio: 2,
+    quality: 1,
+    cacheBust: true,
+  });
+
+  // Cleanup (important)
+  poster.style.height = "auto";
+
+  return dataUrl;
+}
+
 
   /* ========================
      DOWNLOAD (ALL DEVICES)
@@ -161,7 +166,8 @@ export default function JobPosterClient({ job }: { job: any }) {
           ref={posterRef}
           style={{
             width: "1080px",
-            height: "1350px",
+            minHeight: "1350px",
+            height: "auto"
           }}
         >
           <PosterRenderer job={job} />

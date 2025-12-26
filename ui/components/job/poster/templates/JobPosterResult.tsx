@@ -1,4 +1,5 @@
-import { getTitleStyle } from "@/ui/components/job/poster/templates/titlestyle";
+import { getTitleStyle } from "../utils/titleStyle";
+
 export default function JobPosterResult({ job }: { job: any }) {
   const titleStyle = getTitleStyle(job.title || "");
 

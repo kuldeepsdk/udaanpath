@@ -1,4 +1,10 @@
-export function getTitleStyle(title: string) {
+export interface TitleStyle {
+  fontSize: string;
+  lineHeight: string;
+  clamp: string;
+}
+
+export function getTitleStyle(title: string): TitleStyle {
   const len = title.length;
 
   if (len <= 45) {

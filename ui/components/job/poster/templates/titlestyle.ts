@@ -1,4 +1,4 @@
-function getTitleStyle(title: string) {
+export function getTitleStyle(title: string) {
   const len = title.length;
 
   if (len <= 45) {

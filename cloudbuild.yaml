@@ -94,7 +94,38 @@ steps:
         "NEXT_PUBLIC_GA_ID=G-7TZ5S25XCX",
 
         "--set-env-vars",
-        "NEXT_PUBLIC_GTM_ID=GTM-57X2R4PM"
+        "NEXT_PUBLIC_GTM_ID=GTM-57X2R4PM",
+
+        # ✅ Newly added (missing) variables
+        "--set-env-vars",
+        "STUDENT_EXAM_API_TOKEN=internal-master-koenduy65ywt45t54rtgt56567rthrt",
+
+        "--set-env-vars",
+        "UEAS_TOKEN_BYTES=32",
+
+        "--set-env-vars",
+        "UEAS_BCRYPT_ROUNDS=10",
+
+        "--set-env-vars",
+        "SMTP_HOST=smtp.zoho.in",
+
+        "--set-env-vars",
+        "SMTP_PORT=587",
+
+        "--set-env-vars",
+        "SMTP_SECURE=false",
+
+        "--set-env-vars",
+        "SMTP_USER=info@udaanpath.com",
+
+        "--set-env-vars",
+        "SMTP_PASS=nJ6Q4WVeCMTD",
+
+        "--set-env-vars",
+        "MAIL_FROM_NAME=UdaanPath",
+
+        "--set-env-vars",
+        "MAIL_FROM_EMAIL=info@udaanpath.com"
       ]
 
 images:

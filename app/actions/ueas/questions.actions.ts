@@ -165,3 +165,37 @@ export async function createQuestionAction(payload: CreateQuestionPayload) {
 
   return { success: true, questionId };
 }
+
+
+
+export async function bulkUploadQuestionsCsvAction(file: File) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("ueas_org_token")?.value;
+
+  if (!token) {
+    throw new Error("Organization session missing");
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(
+    `${process.env.INTERNAL_API_BASE_URL}/api/ueas/questions/bulk-upload`,
+    {
+      method: "POST",
+      headers: {
+        "x-internal-token": process.env.INTERNAL_API_TOKEN!,
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData, // ✅ multipart upload
+    }
+  );
+
+  const data = await res.json();
+
+  if (!res.ok || !data.success) {
+    throw new Error(data.error || "Bulk upload failed");
+  }
+
+  return data;
+}

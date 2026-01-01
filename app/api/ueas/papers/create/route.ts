@@ -1,3 +1,4 @@
+// app\api\ueas\papers\create\route.ts
 import { NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
 import crypto from "crypto";
@@ -38,8 +39,9 @@ export async function POST(req: Request) {
   await db.execute(
     `
     INSERT INTO UEAS_papers
-    (id, org_id, name, description, default_duration_minutes, instructions)
-    VALUES (?, ?, ?, ?, ?, ?)
+    (id, org_id, name, description, default_duration_minutes, instructions, is_active)
+    VALUES (?, ?, ?, ?, ?, ?, 0)
+
     `,
     [
       paperId,

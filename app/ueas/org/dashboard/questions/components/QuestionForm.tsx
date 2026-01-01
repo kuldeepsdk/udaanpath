@@ -7,6 +7,7 @@ import OptionsEditor from "./OptionsEditor";
 import AnalysisEditor from "./AnalysisEditor";
 import { INDIAN_LANGUAGES } from "@/lib/constants/languages";
 import QuestionEditor from "./QuestionEditor";
+
 /* ================= TYPES ================= */
 
 type QuestionType = "mcq_single" | "mcq_multi";
@@ -98,7 +99,7 @@ export default function QuestionForm() {
     try {
       await createQuestionAction(form);
       alert("Question created successfully");
-      window.location.href = "/ueas/org/dashboard/questions";
+      window.location.href = "/ueas/org/dashboard/questions/create";
     } catch (e: any) {
       alert(e?.message || "Failed to create question");
     } finally {
@@ -109,147 +110,201 @@ export default function QuestionForm() {
   /* ================= UI ================= */
 
   return (
-    <div className="bg-white border rounded-xl p-6 space-y-6">
+    <div className="bg-white border rounded-xl p-6 space-y-8">
 
-      {/* Question */}
-      <QuestionEditor
-        value={form.question_text}
-        onChange={(html) => setForm({ ...form, question_text: html })}
-      />
-
-
-      {/* Type + Difficulty */}
-      <div className="grid sm:grid-cols-2 gap-4">
-        <select
-          value={form.question_type}
-          onChange={(e) =>
-            setForm({ ...form, question_type: e.target.value as QuestionType })
-          }
-          className="rounded-lg border px-3 py-2"
-        >
-          <option value="mcq_single">MCQ (Single Correct)</option>
-          <option value="mcq_multi">MCQ (Multiple Correct)</option>
-        </select>
-
-        <select
-          value={form.difficulty}
-          onChange={(e) =>
-            setForm({ ...form, difficulty: e.target.value as Difficulty })
-          }
-          className="rounded-lg border px-3 py-2"
-        >
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-        </select>
+      {/* ================= QUESTION ================= */}
+      <div>
+        <label className="block text-sm font-semibold mb-2">
+          Question
+        </label>
+        <QuestionEditor
+          value={form.question_text}
+          onChange={(html) => setForm({ ...form, question_text: html })}
+        />
+        <p className="text-xs text-slate-500 mt-1">
+          Enter the full question text (supports formatting)
+        </p>
       </div>
 
-      {/* Marks */}
+      {/* ================= TYPE & DIFFICULTY ================= */}
       <div className="grid sm:grid-cols-2 gap-4">
-        <input
-          type="number"
-          value={form.marks}
-          onChange={(e) => setForm({ ...form, marks: +e.target.value })}
-          placeholder="Marks"
-          className="rounded-lg border px-3 py-2"
-        />
-        <input
-          type="number"
-          step={0.25}
-          value={form.negative_marks}
-          onChange={(e) =>
-            setForm({ ...form, negative_marks: +e.target.value })
-          }
-          placeholder="Negative Marks"
-          className="rounded-lg border px-3 py-2"
+        <div>
+          <label className="block text-sm font-semibold mb-1">
+            Question Type
+          </label>
+          <select
+            value={form.question_type}
+            onChange={(e) =>
+              setForm({ ...form, question_type: e.target.value as QuestionType })
+            }
+            className="w-full rounded-lg border px-3 py-2"
+          >
+            <option value="mcq_single">MCQ (Single Correct)</option>
+            <option value="mcq_multi">MCQ (Multiple Correct)</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold mb-1">
+            Difficulty Level
+          </label>
+          <select
+            value={form.difficulty}
+            onChange={(e) =>
+              setForm({ ...form, difficulty: e.target.value as Difficulty })
+            }
+            className="w-full rounded-lg border px-3 py-2"
+          >
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+      </div>
+
+      {/* ================= MARKS ================= */}
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-semibold mb-1">
+            Marks
+          </label>
+          <input
+            type="number"
+            value={form.marks}
+            onChange={(e) => setForm({ ...form, marks: +e.target.value })}
+            className="w-full rounded-lg border px-3 py-2"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold mb-1">
+            Negative Marks
+          </label>
+          <input
+            type="number"
+            step={0.25}
+            value={form.negative_marks}
+            onChange={(e) =>
+              setForm({ ...form, negative_marks: +e.target.value })
+            }
+            className="w-full rounded-lg border px-3 py-2"
+          />
+        </div>
+      </div>
+
+      {/* ================= SUBJECT & TOPIC ================= */}
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-semibold mb-1">
+            Subject
+          </label>
+          <SubjectAutocomplete
+            value={form.subject}
+            onChange={(v) => setForm({ ...form, subject: v })}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold mb-1">
+            Topic / Chapter
+          </label>
+          <input
+            value={form.topic}
+            onChange={(e) => setForm({ ...form, topic: e.target.value })}
+            className="w-full rounded-lg border px-3 py-2"
+          />
+        </div>
+      </div>
+
+      {/* ================= OPTIONS ================= */}
+      <div>
+        
+        <OptionsEditor
+          type={form.question_type}
+          options={form.options}
+          onChange={(opts) => setForm({ ...form, options: opts })}
         />
       </div>
 
-      {/* Subject + Topic */}
-      <div className="grid sm:grid-cols-2 gap-4">
-        <SubjectAutocomplete
-          value={form.subject}
-          onChange={(v) => setForm({ ...form, subject: v })}
-        />
-        <input
-          value={form.topic}
-          onChange={(e) => setForm({ ...form, topic: e.target.value })}
-          placeholder="Topic"
-          className="rounded-lg border px-3 py-2"
+      {/* ================= ANALYSIS ================= */}
+      <div>
+        <label className="block text-sm font-semibold mb-2">
+          Solution / Explanation
+        </label>
+        <AnalysisEditor
+          value={form.analysis}
+          onChange={(v) => setForm({ ...form, analysis: v })}
         />
       </div>
 
-      {/* Options */}
-      <OptionsEditor
-        type={form.question_type}
-        options={form.options}
-        onChange={(opts) => setForm({ ...form, options: opts })}
-      />
-
-      {/* Analysis */}
-      <AnalysisEditor
-        value={form.analysis}
-        onChange={(v) => setForm({ ...form, analysis: v })}
-      />
-
-      {/* 🔥 ADVANCED SETTINGS */}
+      {/* ================= ADVANCED ================= */}
       <details className="border rounded-xl p-4 bg-slate-50">
         <summary className="cursor-pointer font-semibold text-sm">
           Advanced Settings
         </summary>
 
         <div className="mt-4 space-y-4">
-          <input
-            type="number"
-            value={form.estimated_time_sec}
-            onChange={(e) =>
-              setForm({ ...form, estimated_time_sec: +e.target.value })
-            }
-            placeholder="Estimated Time (seconds)"
-            className="rounded-lg border px-3 py-2 w-full"
-          />
-
-          <input
-            value={form.tags.join(", ")}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                tags: e.target.value
-                  .split(",")
-                  .map(t => t.trim())
-                  .filter(Boolean),
-              })
-            }
-            placeholder="Tags (comma separated)"
-            className="rounded-lg border px-3 py-2 w-full"
-          />
-
-          <select
-            value={form.source}
-            onChange={(e) =>
-              setForm({ ...form, source: e.target.value as SourceType })
-            }
-            className="rounded-lg border px-3 py-2 w-full"
-          >
-            <option value="custom">Custom</option>
-            <option value="book">Book</option>
-            <option value="previous_exam">Previous Exam</option>
-            <option value="online">Online</option>
-          </select>
-          
-            
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">
+            <label className="block text-sm font-semibold mb-1">
+              Estimated Time (seconds)
+            </label>
+            <input
+              type="number"
+              value={form.estimated_time_sec}
+              onChange={(e) =>
+                setForm({ ...form, estimated_time_sec: +e.target.value })
+              }
+              className="w-full rounded-lg border px-3 py-2"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-1">
+              Tags
+            </label>
+            <input
+              value={form.tags.join(", ")}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  tags: e.target.value
+                    .split(",")
+                    .map(t => t.trim())
+                    .filter(Boolean),
+                })
+              }
+              className="w-full rounded-lg border px-3 py-2"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-1">
+              Question Source
+            </label>
+            <select
+              value={form.source}
+              onChange={(e) =>
+                setForm({ ...form, source: e.target.value as SourceType })
+              }
+              className="w-full rounded-lg border px-3 py-2"
+            >
+              <option value="custom">Custom</option>
+              <option value="book">Book</option>
+              <option value="previous_exam">Previous Exam</option>
+              <option value="online">Online</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-1">
               Question Language
             </label>
-
             <select
               value={form.language}
               onChange={(e) =>
                 setForm({ ...form, language: e.target.value })
               }
-              className="w-full rounded-lg border px-3 py-2 text-sm
-                        focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full rounded-lg border px-3 py-2"
             >
               {INDIAN_LANGUAGES.map((lang) => (
                 <option key={lang.code} value={lang.code}>
@@ -257,23 +312,23 @@ export default function QuestionForm() {
                 </option>
               ))}
             </select>
-
-            <p className="mt-1 text-xs text-slate-500">
-              Language used for exam & solution display
-            </p>
           </div>
 
-          <input
-            type="url"
-            value={form.reference_link}
-            onChange={(e) =>
-              setForm({ ...form, reference_link: e.target.value })
-            }
-            placeholder="Reference URL"
-            className="rounded-lg border px-3 py-2 w-full"
-          />
+          <div>
+            <label className="block text-sm font-semibold mb-1">
+              Reference Link
+            </label>
+            <input
+              type="url"
+              value={form.reference_link}
+              onChange={(e) =>
+                setForm({ ...form, reference_link: e.target.value })
+              }
+              className="w-full rounded-lg border px-3 py-2"
+            />
+          </div>
 
-          <label className="flex items-center gap-2 text-sm">
+          <label className="flex items-center gap-2 text-sm font-medium">
             <input
               type="checkbox"
               checked={form.is_published === 1}
@@ -286,7 +341,7 @@ export default function QuestionForm() {
         </div>
       </details>
 
-      {/* Submit */}
+      {/* ================= SUBMIT ================= */}
       <button
         disabled={loading}
         onClick={submit}

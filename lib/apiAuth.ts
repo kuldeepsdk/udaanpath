@@ -77,7 +77,25 @@ export async function validateInternalApi(
   }
 
   if (token.trim() !== process.env.INTERNAL_API_TOKEN?.trim()) {
-    return unauthorized("Invalid internal token : token : " + token+' env token : '+process.env.INTERNAL_API_TOKEN);
+    return unauthorized("Invalid internal token  ");
+  }
+
+  return { ok: true };
+}
+
+export async function validateStudentExamApi(
+  req: Request
+): Promise<ApiAuthResult> {
+  const token = getInternalToken(req);
+
+  if (!token) {
+    return unauthorized("Missing internal token");
+  }
+
+  const studentexamtoken = getHeader(req, "x-studentexam-toen");
+
+  if (token.trim() !== process.env.INTERNAL_API_TOKEN?.trim() && studentexamtoken?.trim() != process.env.STUDENT_EXAM_API_TOKEN?.trim()) {
+    return unauthorized("Invalid Student Exam Token ");
   }
 
   return { ok: true };
@@ -130,3 +148,9 @@ export async function validateAdminApi(
 
   return { ok: true, admin: rows[0] };
 }
+
+
+
+
+
+

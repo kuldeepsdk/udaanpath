@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Navbar from "@/ui/components/Navbar";
-import Footer from "@/ui/components/Footer";
 import { ueasOrgLoginAction } from "@/app/actions/ueas/ueasOrgAuth.actions";
 
 export default function OrgLoginPage() {
@@ -26,8 +24,7 @@ export default function OrgLoginPage() {
 
   return (
     <>
-      <Navbar />
-
+      
       <main className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
         <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-sm border">
 
@@ -81,7 +78,7 @@ export default function OrgLoginPage() {
         </div>
       </main>
 
-      <Footer />
+     
     </>
   );
 }

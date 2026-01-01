@@ -6,29 +6,43 @@ export async function POST(req: Request) {
   const auth = await validateInternalApi(req);
   if (!auth.ok) return auth.response;
 
-  const token = req.headers.get("authorization")?.replace("Bearer ", "");
+  const token = req.headers
+    .get("authorization")
+    ?.replace("Bearer ", "");
+
   if (!token) {
-    return NextResponse.json({ success: false, error: "Missing token" }, { status: 401 });
+    return NextResponse.json(
+      { success: false, error: "Missing token" },
+      { status: 401 }
+    );
   }
 
   const { exam_id } = await req.json();
   if (!exam_id) {
-    return NextResponse.json({ success: false, error: "exam_id required" }, { status: 400 });
+    return NextResponse.json(
+      { success: false, error: "exam_id required" },
+      { status: 400 }
+    );
   }
 
   const db = await getDB();
 
-  // 🔎 Resolve student from token (adjust if your student auth differs)
+  /* ---------- STUDENT FROM SESSION TOKEN ---------- */
   const [stuRows]: any = await db.execute(
-    `SELECT id FROM UEAS_students WHERE password_hash = ? LIMIT 1`,
+    `SELECT id FROM UEAS_students WHERE session_token = ? LIMIT 1`,
     [token]
   );
+
   if (!stuRows.length) {
-    return NextResponse.json({ success: false, error: "Unauthorized student" }, { status: 401 });
+    return NextResponse.json(
+      { success: false, error: "Unauthorized student" },
+      { status: 401 }
+    );
   }
+
   const student_id = stuRows[0].id;
 
-  // 🔎 Validate exam time
+  /* ---------- EXAM ---------- */
   const [examRows]: any = await db.execute(
     `
     SELECT e.*, p.id AS paper_id
@@ -39,15 +53,21 @@ export async function POST(req: Request) {
     `,
     [exam_id]
   );
+
   if (!examRows.length) {
-    return NextResponse.json({ success: false, error: "Exam not found" }, { status: 404 });
+    return NextResponse.json(
+      { success: false, error: "Exam not found" },
+      { status: 404 }
+    );
   }
+
   const exam = examRows[0];
 
-  // ⏱️ Time window check (server-side)
+  /* ---------- TIME WINDOW ---------- */
   const now = new Date();
   const start = new Date(`${exam.exam_date}T${exam.start_time}`);
   const end = new Date(`${exam.exam_date}T${exam.end_time}`);
+
   if (now < start || now > end) {
     return NextResponse.json(
       { success: false, error: "Exam not active" },
@@ -55,17 +75,20 @@ export async function POST(req: Request) {
     );
   }
 
-  // 🎓 Eligibility: student must be in assigned batch
+  /* ---------- ELIGIBILITY ---------- */
   const [elig]: any = await db.execute(
     `
-    SELECT 1
+    SELECT eb.batch_id
     FROM UEAS_exam_batches eb
-    JOIN UEAS_batch_students bs ON bs.batch_id = eb.batch_id
-    WHERE eb.exam_id = ? AND bs.student_id = ?
+    JOIN UEAS_batch_students bs
+      ON bs.batch_id = eb.batch_id
+    WHERE eb.exam_id = ?
+      AND bs.student_id = ?
     LIMIT 1
     `,
     [exam_id, student_id]
   );
+
   if (!elig.length) {
     return NextResponse.json(
       { success: false, error: "Student not eligible for this exam" },
@@ -73,53 +96,67 @@ export async function POST(req: Request) {
     );
   }
 
-  // 🔒 Disqualification check
-    const [attemptStatusRows]: any = await db.execute(
+  const batch_id = elig[0].batch_id;
+
+  /* ---------- EXISTING ATTEMPT ---------- */
+  const [attemptRows]: any = await db.execute(
     `
-    SELECT status
+    SELECT exam_status
     FROM UEAS_exam_students
     WHERE exam_id = ? AND student_id = ?
     LIMIT 1
     `,
     [exam_id, student_id]
-    );
+  );
 
-    if (attemptStatusRows.length && attemptStatusRows[0].status === "disqualified") {
+  if (
+    attemptRows.length &&
+    attemptRows[0].exam_status === "completed"
+  ) {
     return NextResponse.json(
-        {
-        success: false,
-        error: "You have been disqualified from this exam",
-        status: "disqualified",
-        },
-        { status: 403 }
+      { success: false, error: "Exam already submitted" },
+      { status: 403 }
     );
-    }
+  }
 
+  if (
+    attemptRows.length &&
+    attemptRows[0].exam_status === "suspended"
+  ) {
+    return NextResponse.json(
+      { success: false, error: "You are suspended from this exam" },
+      { status: 403 }
+    );
+  }
 
-  // 🧾 Create/Update attempt
+  /* ---------- CREATE / UPDATE ATTEMPT ---------- */
   await db.execute(
     `
     INSERT INTO UEAS_exam_students
-      (id, exam_id, student_id, status, start_time)
+      (id, exam_id, batch_id, student_id, exam_status, started_at)
     VALUES
-      (SUBSTRING(UUID(),1,16), ?, ?, 'in_progress', NOW())
+      (SUBSTRING(UUID(),1,16), ?, ?, ?, 'started', NOW())
     ON DUPLICATE KEY UPDATE
-      status = 'in_progress',
-      start_time = IFNULL(start_time, NOW())
+      exam_status = 'started',
+      started_at = IFNULL(started_at, NOW()),
+      updated_at = NOW()
     `,
-    [exam_id, student_id]
+    [exam_id, batch_id, student_id]
   );
 
-  // 📄 Fetch questions
+  /* ---------- QUESTIONS ---------- */
   let qSql = `
     SELECT q.id, q.question_text, q.question_type, q.marks
     FROM UEAS_paper_questions pq
     JOIN UEAS_questions q ON q.id = pq.question_id
     WHERE pq.paper_id = ?
   `;
+
   if (exam.randomize_questions) qSql += " ORDER BY RAND()";
 
-  const [questions]: any = await db.execute(qSql, [exam.paper_id]);
+  const [questions]: any = await db.execute(qSql, [
+    exam.paper_id,
+  ]);
 
   for (const q of questions) {
     let oSql = `
@@ -128,10 +165,10 @@ export async function POST(req: Request) {
       WHERE question_id = ?
     `;
     if (exam.randomize_options) oSql += " ORDER BY RAND()";
+
     const [opts]: any = await db.execute(oSql, [q.id]);
     q.options = opts;
   }
-  
 
   return NextResponse.json(
     {

@@ -1,3 +1,5 @@
+//app\api\ueas\papers\remove-question\route.ts
+
 import { NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
 import { validateInternalApi } from "@/lib/apiAuth";

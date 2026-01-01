@@ -1,3 +1,5 @@
+//app\(public)\layout.tsx
+
 import "@/app/globals.css";
 
 import Navbar from "@/ui/components/Navbar";

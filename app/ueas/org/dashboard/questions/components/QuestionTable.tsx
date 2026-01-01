@@ -17,7 +17,7 @@ interface Props {
   data: {
     page: number;
     limit: number;
-    count: number;
+    total: number;      // ✅ from backend
     questions: Question[];
   } | null;
   loading: boolean;
@@ -30,7 +30,11 @@ export default function QuestionTable({
   onPageChange,
 }: Props) {
   if (loading) {
-    return <div className="p-6 text-sm text-slate-500">Loading questions…</div>;
+    return (
+      <div className="p-6 text-sm text-slate-500">
+        Loading questions…
+      </div>
+    );
   }
 
   if (!data || data.questions.length === 0) {
@@ -41,14 +45,16 @@ export default function QuestionTable({
     );
   }
 
-  const { questions, page, limit, count } = data;
+  const { questions, page, limit, total } = data;
+
+  const totalPages = Math.ceil(total / limit);
   const hasPrev = page > 1;
-  const hasNext = count === limit; // backend already limits results
+  const hasNext = page < totalPages;
 
   return (
     <div className="bg-white border rounded-xl overflow-hidden">
 
-      {/* TABLE */}
+      {/* ================= TABLE ================= */}
       <table className="w-full text-sm">
         <thead className="bg-slate-50 border-b">
           <tr>
@@ -131,10 +137,14 @@ export default function QuestionTable({
         </tbody>
       </table>
 
-      {/* PAGINATION */}
+      {/* ================= PAGINATION ================= */}
       <div className="flex items-center justify-between px-4 py-3 bg-slate-50 text-sm">
+
         <span className="text-slate-500">
-          Page {page}
+          Page <strong>{page}</strong> of <strong>{totalPages}</strong>
+          <span className="ml-2 text-xs">
+            ({total} questions)
+          </span>
         </span>
 
         <div className="flex gap-2">

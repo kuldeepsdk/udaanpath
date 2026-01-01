@@ -5,6 +5,7 @@ import { validateInternalApi } from "@/lib/apiAuth";
 export async function GET(req: Request) {
   console.log("▶️ Question List API called");
 
+  /* ---------------- AUTH ---------------- */
   const auth = await validateInternalApi(req);
   if (!auth.ok) return auth.response;
 
@@ -24,13 +25,56 @@ export async function GET(req: Request) {
   const offset = (page - 1) * limit;
 
   /* ---------------- FILTERS ---------------- */
-  const search = searchParams.get("search");
-  const subject = searchParams.get("subject");
+  const search = searchParams.get("search")?.trim();
+  const subject = searchParams.get("subject")?.trim();
   const difficulty = searchParams.get("difficulty");
   const status = searchParams.get("status"); // published | draft
 
-  /* ---------------- BASE QUERY ---------------- */
-  let sql = `
+  /* ---------------- WHERE CLAUSE ---------------- */
+  let whereSql = `
+    FROM UEAS_questions q
+    JOIN UEAS_organization_users u
+      ON u.org_id = q.org_id
+    WHERE u.session_token = ?
+  `;
+
+  const params: any[] = [token];
+
+  if (search) {
+    whereSql += `
+      AND (
+        q.question_text LIKE ?
+        OR q.subject LIKE ?
+        OR q.topic LIKE ?
+      )
+    `;
+    params.push(`%${search}%`, `%${search}%`, `%${search}%`);
+  }
+
+  if (subject) {
+    whereSql += " AND q.subject = ?";
+    params.push(subject);
+  }
+
+  if (difficulty && ["easy", "medium", "hard"].includes(difficulty)) {
+    whereSql += " AND q.difficulty = ?";
+    params.push(difficulty);
+  }
+
+  if (status === "published") {
+    whereSql += " AND q.is_published = 1";
+  } else if (status === "draft") {
+    whereSql += " AND q.is_published = 0";
+  }
+
+  /* ---------------- SQL QUERIES ---------------- */
+
+  const countSql = `
+    SELECT COUNT(*) as total
+    ${whereSql}
+  `;
+
+  const dataSql = `
     SELECT
       q.id,
       q.question_text,
@@ -45,69 +89,30 @@ export async function GET(req: Request) {
       q.estimated_time_sec,
       q.source,
       q.created_at
-    FROM UEAS_questions q
-    JOIN UEAS_organization_users u
-      ON u.org_id = q.org_id
-    WHERE u.session_token = ?
-  `;
-
-  const params: any[] = [token];
-
-  /* ---------------- SEARCH ---------------- */
-  if (search && search.trim()) {
-    sql += `
-      AND (
-        q.question_text LIKE ?
-        OR q.subject LIKE ?
-        OR q.topic LIKE ?
-      )
-    `;
-    params.push(
-      `%${search}%`,
-      `%${search}%`,
-      `%${search}%`
-    );
-  }
-
-  /* ---------------- SUBJECT ---------------- */
-  if (subject && subject.trim()) {
-    sql += " AND q.subject = ?";
-    params.push(subject);
-  }
-
-  /* ---------------- DIFFICULTY ---------------- */
-  if (difficulty && ["easy", "medium", "hard"].includes(difficulty)) {
-    sql += " AND q.difficulty = ?";
-    params.push(difficulty);
-  }
-
-  /* ---------------- STATUS ---------------- */
-  if (status === "published") {
-    sql += " AND q.is_published = 1";
-  } else if (status === "draft") {
-    sql += " AND q.is_published = 0";
-  }
-
-  /* ---------------- ORDER + LIMIT ---------------- */
-  sql += `
+    ${whereSql}
     ORDER BY q.created_at DESC
     LIMIT ${offset}, ${limit}
   `;
 
-  /* ---------------- DEBUG LOGS ---------------- */
-  console.log("▶️ FINAL SQL:\n", sql);
+  /* ---------------- DEBUG ---------------- */
+  console.log("▶️ COUNT SQL:\n", countSql);
+  console.log("▶️ DATA SQL:\n", dataSql);
   console.log("▶️ PARAMS:", params);
 
   try {
     const db = await getDB();
-    const [rows]: any = await db.query(sql, params);
+
+    const [[countRow]]: any = await db.query(countSql, params);
+    const total = countRow.total;
+
+    const [rows]: any = await db.query(dataSql, params);
 
     return NextResponse.json(
       {
         success: true,
         page,
         limit,
-        count: rows.length,
+        total,          // ✅ REQUIRED FOR PAGINATION
         questions: rows,
       },
       { status: 200 }

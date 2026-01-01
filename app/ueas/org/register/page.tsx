@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Navbar from "@/ui/components/Navbar";
-import Footer from "@/ui/components/Footer";
 import StepIndicator from "./components/StepIndicator";
 import { sendOrgRegisterOtpAction } from "@/app/actions/ueas/ueasOrgRegister.actions";
 
@@ -83,7 +81,7 @@ export default function OrgRegisterPage() {
 
   return (
     <>
-      <Navbar />
+     
 
       <main className="bg-slate-50 min-h-screen py-16">
         <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-sm border">
@@ -93,8 +91,18 @@ export default function OrgRegisterPage() {
           </h1>
 
           <p className="mt-2 text-center text-slate-600 text-sm">
-            Secure online exams with anti-cheating & instant results
+            Secure online exams with anti-cheating & instant results 
           </p>
+
+          <div className="my-2 text-center text-sm text-slate-600">
+            Already have an account?{" "}
+            <a
+              href="/ueas/org/login"
+              className="text-blue-600 hover:underline"
+            >
+              Login Now
+            </a>
+          </div>
 
           <StepIndicator current={step} />
 
@@ -196,7 +204,7 @@ export default function OrgRegisterPage() {
         </div>
       </main>
 
-      <Footer />
+     
     </>
   );
 }

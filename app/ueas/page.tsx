@@ -1,5 +1,3 @@
-import Navbar from "@/ui/components/Navbar";
-import Footer from "@/ui/components/Footer";
 import {
   ShieldCheck,
   Timer,
@@ -15,7 +13,6 @@ import {
 export default function UEASLandingPage() {
   return (
     <>
-      <Navbar />
 
       <main className="bg-slate-50 overflow-hidden">
 
@@ -171,7 +168,6 @@ export default function UEASLandingPage() {
 
       </main>
 
-      <Footer />
     </>
   );
 }

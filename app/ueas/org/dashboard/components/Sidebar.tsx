@@ -31,8 +31,9 @@ export default function Sidebar() {
 
       <nav className="flex-1 px-3 space-y-1">
         <NavLink href="/ueas/org/dashboard" label="Dashboard" pathname={pathname} />
-        <NavLink href="/ueas/org/dashboard/batches" label="Batches" pathname={pathname} />
+        <NavLink href="/ueas/org/dashboard/batch" label="Batches" pathname={pathname} />
         <NavLink href="/ueas/org/dashboard/questions" label="Question Bank" pathname={pathname} />
+        <NavLink href="/ueas/org/dashboard/paper" label="Exam Papers" pathname={pathname} />
         <NavLink href="/ueas/org/dashboard/exams" label="Exams" pathname={pathname} />
         <NavLink href="/ueas/org/dashboard/results" label="Results" pathname={pathname} />
       </nav>

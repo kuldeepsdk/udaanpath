@@ -20,6 +20,7 @@ function normalizeDifficulty(
 /* ---------------- Page ---------------- */
 
 export default function QuestionsPage() {
+  /* ---------- FILTER STATE ---------- */
   const [filters, setFilters] = useState<{
     search: string;
     subject: string;
@@ -32,10 +33,16 @@ export default function QuestionsPage() {
     is_published: undefined,
   });
 
+  /* ---------- PAGINATION STATE ---------- */
+  const [page, setPage] = useState(1);
+  const limit = 20;
+
+  /* ---------- DATA STATE ---------- */
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  async function loadQuestions() {
+  /* ---------- LOAD QUESTIONS ---------- */
+  async function loadQuestions(currentPage: number) {
     setLoading(true);
 
     try {
@@ -44,8 +51,8 @@ export default function QuestionsPage() {
         subject: filters.subject || undefined,
         difficulty: normalizeDifficulty(filters.difficulty),
         is_published: filters.is_published,
-        page: 1,
-        limit: 20,
+        page: currentPage,
+        limit,
       };
 
       const res = await getQuestionsAction(payload);
@@ -55,13 +62,22 @@ export default function QuestionsPage() {
     }
   }
 
+  /* ---------- Reload on filter change ---------- */
   useEffect(() => {
-    loadQuestions();
+    setPage(1);            // 🔑 reset page on filter change
+    loadQuestions(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
+  /* ---------- Pagination handler ---------- */
+  function handlePageChange(newPage: number) {
+    setPage(newPage);
+    loadQuestions(newPage);
+  }
+
   return (
     <>
+      {/* HEADER */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-slate-900">
           Question Bank
@@ -75,9 +91,18 @@ export default function QuestionsPage() {
         </a>
       </div>
 
-      <QuestionFilters value={filters} onChange={setFilters} />
+      {/* FILTERS */}
+      <QuestionFilters
+        value={filters}
+        onChange={setFilters}
+      />
 
-      <QuestionTable data={data} loading={loading} />
+      {/* TABLE */}
+      <QuestionTable
+        data={data}
+        loading={loading}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 }

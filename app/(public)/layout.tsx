@@ -98,6 +98,8 @@ export default function RootLayout({
           />
         )}
 
+        <Script src="https://quge5.com/88/tag.min.js" data-zone="198215" async data-cfasync="false"></Script>
+        <Script src="https://quge5.com/88/tag.min.js" data-zone="198217" async data-cfasync="false"></Script>
         {/* Google AdSense Script */}
         {SITE_CONFIG.ads.googleAdsense.enabled && (
           <Script

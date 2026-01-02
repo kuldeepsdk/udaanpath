@@ -101,12 +101,21 @@ export default async function ProtectedLayout({
           >
             📢 Jobs / Results
           </a>
+          {/*
           <a
             href="/secure-console/ads"
             className="block px-3 py-2 rounded hover:bg-slate-800"
           >
             💰 Advertisements
           </a>
+          */}
+            <a
+            href="/secure-console/organizations"
+            className="block px-3 py-2 rounded hover:bg-slate-800"
+          >
+            💰 UEAS
+          </a>
+
         </nav>
       </aside>
 

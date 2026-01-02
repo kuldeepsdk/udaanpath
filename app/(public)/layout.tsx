@@ -98,8 +98,21 @@ export default function RootLayout({
           />
         )}
 
-        <Script src="https://quge5.com/88/tag.min.js" data-zone="198215" async data-cfasync="false"></Script>
-        <Script src="https://quge5.com/88/tag.min.js" data-zone="198217" async data-cfasync="false"></Script>
+        <Script
+          id="nap5k-ads-script"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                var s = document.createElement('script');
+                s.dataset.zone = '10407564';
+                s.src = 'https://nap5k.com/tag.min.js';
+                document.body.appendChild(s);
+              })();
+            `,
+          }}
+        />
+
         {/* Google AdSense Script */}
         {SITE_CONFIG.ads.googleAdsense.enabled && (
           <Script

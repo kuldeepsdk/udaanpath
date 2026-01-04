@@ -106,8 +106,23 @@ steps:
         "--set-env-vars",
         "UEAS_BCRYPT_ROUNDS=10",
 
+         # ===============================
+        # 🔹 Cloudinary (Image CDN)
+        # ===============================
         "--set-env-vars",
-        "SMTP_HOST=smtp.zoho.in",
+        "CLOUDINARY_CLOUD_NAME=domixqd2u",
+
+        "--set-env-vars",
+        "CLOUDINARY_API_KEY=922443151119374",
+
+        "--set-env-vars",
+        "CLOUDINARY_API_SECRET=LNhTE98f06gYNy87KMpuZmtdqSU",
+
+        # ===============================
+        # 🔹 AWS SES SMTP (already using SES)
+        # ===============================
+        "--set-env-vars",
+        "SMTP_HOST=email-smtp.ap-south-1.amazonaws.com",
 
         "--set-env-vars",
         "SMTP_PORT=587",
@@ -116,16 +131,17 @@ steps:
         "SMTP_SECURE=false",
 
         "--set-env-vars",
-        "SMTP_USER=info@udaanpath.com",
+        "SMTP_USER=AKIA4SDNV2C3ZZTUZV64",
 
         "--set-env-vars",
-        "SMTP_PASS=nJ6Q4WVeCMTD",
+        "SMTP_PASS=BN7h6T2qPqYFQP4L8kwkNYXx/HLbXHK81k83zfy7V/CO",
 
         "--set-env-vars",
         "MAIL_FROM_NAME=UdaanPath",
 
         "--set-env-vars",
         "MAIL_FROM_EMAIL=info@udaanpath.com"
+
       ]
 
 images:

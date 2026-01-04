@@ -28,7 +28,7 @@ export async function GET(req: Request) {
 
   const db = await getDB();
 
-  /* ---------- EXAM ---------- */
+  /* ---------- EXAM + ORG ---------- */
   const [examRows]: any = await db.execute(
     `
     SELECT e.*
@@ -47,7 +47,10 @@ export async function GET(req: Request) {
     );
   }
 
-  /* ---------- BATCHES WITH ASYNC STATUS ---------- */
+  const exam = examRows[0];
+  const org_id = exam.org_id;
+
+  /* ---------- BATCHES ---------- */
   const [batches]: any = await db.execute(
     `
     SELECT
@@ -76,11 +79,47 @@ export async function GET(req: Request) {
     [exam_id]
   );
 
+  /* ---------- EXAM CREDIT WALLET ---------- */
+  const [walletRows]: any = await db.execute(
+    `
+    SELECT
+      total_credits,
+      used_credits,
+      remaining_credits
+    FROM UEAS_org_exam_wallet
+    WHERE org_id = ?
+    LIMIT 1
+    `,
+    [org_id]
+  );
+
+  let credits;
+
+  if (walletRows.length) {
+    const w = walletRows[0];
+    credits = {
+      enabled: true,
+      total: Number(w.total_credits || 0),
+      used: Number(w.used_credits || 0),
+      remaining: Number(w.remaining_credits || 0),
+    };
+  } else {
+    // 🛡️ Backward compatibility for old orgs
+    credits = {
+      enabled: false,
+      total: 0,
+      used: 0,
+      remaining: 0,
+      note: "Credit system not initialized for this organization",
+    };
+  }
+
   return NextResponse.json(
     {
       success: true,
-      exam: examRows[0],
+      exam,
       batches,
+      credits,
     },
     { status: 200 }
   );

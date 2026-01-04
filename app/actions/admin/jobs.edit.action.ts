@@ -75,7 +75,7 @@ export async function updateJobAction(
   if (!jobId) {
     throw new Error("Job ID is required");
   }
-
+  console.log('updateJobAction payload : '+JSON.stringify(payload));
   const res = await fetch(
     `${await getApiBaseUrl()}/api/admin/jobs/${jobId}`,
     {

@@ -23,8 +23,12 @@ export async function getExamsAction() {
     throw new Error(res.data?.error || "Failed to load exams");
   }
 
-  return res.data.exams;
+  return {
+    exams: res.data.exams,
+    credits: res.data.credits,
+  };
 }
+
 
 /* ================= CREATE ================= */
 

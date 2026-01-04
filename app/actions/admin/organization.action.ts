@@ -122,3 +122,75 @@ export async function updateOrgStatusAction(
     new_status: data.new_status as OrgStatus,
   };
 }
+
+/* =========================
+   Fetch Org Details
+========================= */
+
+export async function getOrganizationDetailAction(orgId: string) {
+  if (!orgId) {
+    throw new Error("Organization ID missing");
+  }
+
+  const res = await fetch(
+    `${await getApiBaseUrl()}/api/admin/organizations/${orgId}`,
+    {
+      method: "GET",
+      headers: await getAdminHeaders(),
+      cache: "no-store",
+    }
+  );
+
+  const text = await res.text();
+
+  // 🔐 protect against empty / invalid JSON
+  let data: any;
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    throw new Error("Invalid API response");
+  }
+
+  if (!res.ok || !data?.success) {
+    console.log("getOrganizationDetailAction failed:"+JSON.stringify(data));
+    throw new Error(data?.error || "Failed to load organization");
+  }
+
+  return data;
+}
+
+
+
+/* =========================
+   Assign Credits
+========================= */
+export async function assignOrgCreditsAction(
+  orgId: string,
+  credits: number,
+  remarks?: string
+) {
+  if (!orgId || credits <= 0) {
+    throw new Error("Invalid input");
+  }
+
+  const res = await fetch(
+    `${await getApiBaseUrl()}/api/admin/organizations/${orgId}/assign-credits`,
+    {
+      method: "POST",
+      headers: {
+        ...(await getAdminHeaders()),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ credits, remarks }),
+      cache: "no-store",
+    }
+  );
+  console.log('assignOrgCreditsAction res : '+JSON.stringify(res));
+  const data = await res.json();
+
+  if (!res.ok || !data?.success) {
+    throw new Error(data?.error || "Failed to assign credits");
+  }
+
+  return data;
+}

@@ -31,9 +31,13 @@ export default function BasicJobForm({
 }) {
   const [pending, startTransition] = useTransition();
   const [autoSlug, setAutoSlug] = useState(true);
-  const [imageBase64, setImageBase64] = useState<string | null>(
+  //const [imageBase64, setImageBase64] = useState<string | null>(job.notification_image_base64 || null );
+  const [imageUrl, setImageUrl] = useState<string | null>(
     job.notification_image_base64 || null
   );
+
+  const [uploading, setUploading] = useState(false);
+
 
   const [form, setForm] = useState({
     title: job.title || "",
@@ -69,27 +73,48 @@ export default function BasicJobForm({
   /* -----------------------------
      Image → Base64
   ------------------------------ */
-  function handleImageUpload(file: File) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImageBase64(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+ 
+  async function uploadToCloudinary(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "udaanpath_jobs");
+
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/domixqd2u/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
+    console.log("uploadToCloudinary:", data);
+
+    return data.secure_url as string;
   }
 
   /* -----------------------------
      Save
   ------------------------------ */
   function handleSave() {
-    startTransition(async () => {
-      await updateJobAction(jobId, {
-        ...form,
-        notification_image_base64: imageBase64,
-      });
+  startTransition(async () => {
+    const payload: any = {
+      ...form,
+    };
+    console.log('imageUrl : '+imageUrl);
+    // ✅ IMPORTANT: explicitly attach image field
+    if (imageUrl !== null) {
+      payload.notification_image_base64 = imageUrl;
+    }
 
-      alert("Job updated successfully");
-    });
-  }
+    console.log("FINAL UPDATE PAYLOAD:", payload);
+
+    await updateJobAction(jobId, payload);
+
+    alert("Job updated successfully");
+  });
+}
+
 
   return (
     <div className="space-y-8">
@@ -254,20 +279,32 @@ export default function BasicJobForm({
         <input
           type="file"
           accept="image/*"
-          onChange={(e) => {
+          onChange={async (e) => {
             const f = e.target.files?.[0];
-            if (f) handleImageUpload(f);
+            if (!f) return;
+
+            setUploading(true);
+            const url = await uploadToCloudinary(f);
+            setImageUrl(url);
+            setUploading(false);
           }}
         />
 
-        {imageBase64 && (
+        {uploading && (
+          <p className="text-sm text-slate-500 mt-2">
+            Uploading new image…
+          </p>
+        )}
+
+        {imageUrl && (
           <img
-            src={imageBase64}
+            src={imageUrl}
             alt="Notification"
             className="mt-4 max-h-56 rounded border"
           />
         )}
       </Section>
+
 
       {/* =====================
          PUBLISH

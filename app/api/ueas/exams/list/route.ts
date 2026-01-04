@@ -1,8 +1,9 @@
+// app/api/ueas/exams/list/route.ts
+
 import { NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
 import { validateInternalApi } from "@/lib/apiAuth";
 
-/* ---------- IST SAFE COMBINER ---------- */
 function combineDateTimeIST(dateInput: any, time: string): Date {
   let dateStr: string;
 
@@ -19,7 +20,6 @@ function combineDateTimeIST(dateInput: any, time: string): Date {
 }
 
 export async function GET(req: Request) {
-  /* ---------- AUTH ---------- */
   const auth = await validateInternalApi(req);
   if (!auth.ok) return auth.response;
 
@@ -33,7 +33,27 @@ export async function GET(req: Request) {
 
   const db = await getDB();
 
-  /* ---------- FETCH EXAMS ---------- */
+  /* ---------- ORG ---------- */
+  const [[orgUser]]: any = await db.execute(
+    `
+    SELECT org_id
+    FROM UEAS_organization_users
+    WHERE session_token = ?
+    LIMIT 1
+    `,
+    [token]
+  );
+
+  if (!orgUser) {
+    return NextResponse.json(
+      { success: false, error: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  const org_id = orgUser.org_id;
+
+  /* ---------- EXAMS ---------- */
   const [rows]: any = await db.execute(
     `
     SELECT
@@ -45,16 +65,14 @@ export async function GET(req: Request) {
       e.status,
       e.created_at
     FROM UEAS_exams e
-    JOIN UEAS_organization_users u ON u.org_id = e.org_id
-    WHERE u.session_token = ?
+    WHERE e.org_id = ?
     ORDER BY e.exam_date DESC, e.start_time DESC
     LIMIT 20
     `,
-    [token]
+    [org_id]
   );
 
-  const now = new Date(); // ✅ DO NOT add IST offset manually
-
+  const now = new Date();
   const updates: Promise<any>[] = [];
 
   const exams = rows.map((e: any) => {
@@ -63,15 +81,10 @@ export async function GET(req: Request) {
 
     let correctStatus: "scheduled" | "active" | "completed";
 
-    if (now < examStart) {
-      correctStatus = "scheduled";
-    } else if (now >= examStart && now < examEnd) {
-      correctStatus = "active";
-    } else {
-      correctStatus = "completed";
-    }
+    if (now < examStart) correctStatus = "scheduled";
+    else if (now < examEnd) correctStatus = "active";
+    else correctStatus = "completed";
 
-    /* ---------- AUTO DB FIX ---------- */
     if (e.status !== correctStatus) {
       updates.push(
         db.execute(
@@ -83,22 +96,45 @@ export async function GET(req: Request) {
 
     return {
       ...e,
-      status: correctStatus,              // ✅ always correct
+      status: correctStatus,
       exam_start_at: examStart.toISOString(),
       exam_end_at: examEnd.toISOString(),
     };
   });
 
-  /* ---------- APPLY STATUS FIXES ---------- */
-  if (updates.length) {
-    await Promise.all(updates);
-  }
+  if (updates.length) await Promise.all(updates);
+
+  /* ---------- CREDITS ---------- */
+  const [walletRows]: any = await db.execute(
+    `
+    SELECT total_credits, used_credits, remaining_credits
+    FROM UEAS_org_exam_wallet
+    WHERE org_id = ?
+    LIMIT 1
+    `,
+    [org_id]
+  );
+
+  const credits = walletRows.length
+    ? {
+        enabled: true,
+        total: Number(walletRows[0].total_credits),
+        used: Number(walletRows[0].used_credits),
+        remaining: Number(walletRows[0].remaining_credits),
+      }
+    : {
+        enabled: false,
+        total: 0,
+        used: 0,
+        remaining: 0,
+      };
 
   return NextResponse.json(
     {
       success: true,
       server_now: now.toISOString(),
       exams,
+      credits,
     },
     { status: 200 }
   );

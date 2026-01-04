@@ -50,7 +50,7 @@ export default function OrgTable({
             <tr key={o.id} className="border-b last:border-0">
               <td className="px-4 py-3 font-medium">
                 <Link
-                  href={`/secure-console/organizations/${o.id}`}
+                  href={`/secure-console/organizations/${o.id}/details`}
                   className="hover:underline"
                 >
                   {o.name}

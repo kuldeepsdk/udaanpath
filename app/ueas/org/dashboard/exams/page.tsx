@@ -7,6 +7,7 @@ import { getExamsAction } from "@/app/actions/ueas/exams.actions";
 
 export default function ExamsPage() {
   const [exams, setExams] = useState<any[]>([]);
+  const [credits, setCredits] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [openCreate, setOpenCreate] = useState(false);
 
@@ -14,7 +15,8 @@ export default function ExamsPage() {
     setLoading(true);
     try {
       const res = await getExamsAction();
-      setExams(res);
+      setExams(res.exams);
+      setCredits(res.credits);
     } finally {
       setLoading(false);
     }
@@ -24,17 +26,41 @@ export default function ExamsPage() {
     loadExams();
   }, []);
 
+  const canCreateExam =
+    credits?.enabled && credits?.remaining > 0;
+
   return (
     <>
       {/* HEADER */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">
-          Exams
-        </h1>
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">
+            Exams
+          </h1>
+
+          {credits && (
+            <p className="text-sm text-slate-600 mt-1">
+              🎫 Exam Credits:{" "}
+              <b>{credits.remaining}</b> / {credits.total}
+            </p>
+          )}
+        </div>
 
         <button
           onClick={() => setOpenCreate(true)}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-white text-sm font-semibold"
+          disabled={!canCreateExam}
+          className={`rounded-lg px-4 py-2 text-sm font-semibold
+            ${
+              canCreateExam
+                ? "bg-blue-600 text-white"
+                : "bg-slate-300 text-slate-500 cursor-not-allowed"
+            }
+          `}
+          title={
+            !canCreateExam
+              ? "No exam credits left. Please purchase more."
+              : ""
+          }
         >
           + Create Exam
         </button>
@@ -44,11 +70,14 @@ export default function ExamsPage() {
       <ExamsTable exams={exams} loading={loading} />
 
       {/* CREATE MODAL */}
-      <CreateExamModal
-        open={openCreate}
-        onClose={() => setOpenCreate(false)}
-        onCreated={loadExams}
-      />
+      {canCreateExam && (
+        <CreateExamModal
+          open={openCreate}
+          onClose={() => setOpenCreate(false)}
+          onCreated={loadExams}
+          credits={credits}
+        />
+      )}
     </>
   );
 }

@@ -40,7 +40,9 @@ export default function NewJobPage() {
   const [pending, startTransition] = useTransition();
 
   const [autoSlug, setAutoSlug] = useState<boolean>(true);
-  const [imageBase64, setImageBase64] = useState<string | null>(null);
+  //const [imageBase64, setImageBase64] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const [form, setForm] = useState<JobForm>({
     title: "",
@@ -82,27 +84,46 @@ export default function NewJobPage() {
   /* -----------------------------
      Image → Base64
   ------------------------------ */
-  function handleImageUpload(file: File) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImageBase64(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+  
+
+  async function uploadToCloudinary(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "udaanpath_jobs");
+
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/domixqd2u/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
+    console.log("uploadToCloudinary:", data);
+
+    return data.secure_url as string;
   }
+
 
   /* -----------------------------
      Save
   ------------------------------ */
   function handleSave() {
-    startTransition(async () => {
-      const res = await createJobAction({
-        ...form,
-        notification_image_base64: imageBase64,
-      });
+  startTransition(async () => {
+    const payload: any = {
+      ...form,
+    };
 
-      router.push(`/secure-console/jobs/${res.jobId}/edit`);
-    });
-  }
+    if (imageUrl) {
+      payload.notification_image_base64 = imageUrl;
+    }
+
+    const res = await createJobAction(payload);
+    router.push(`/secure-console/jobs/${res.jobId}/edit`);
+  });
+}
+
 
   return (
     <div className="max-w-6xl space-y-10">
@@ -118,12 +139,14 @@ export default function NewJobPage() {
         </div>
 
         <button
-          disabled={pending}
+          disabled={pending || uploading}
           onClick={handleSave}
-          className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm hover:bg-blue-700 disabled:opacity-60"
+          className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm
+                    hover:bg-blue-700 disabled:opacity-60"
         >
-          {pending ? "Saving..." : "Save Vacancy"}
+          {pending ? "Saving..." : uploading ? "Uploading image..." : "Save Vacancy"}
         </button>
+
       </div>
 
       {/* BASIC INFO */}
@@ -256,19 +279,29 @@ export default function NewJobPage() {
         <input
           type="file"
           accept="image/*"
-          onChange={(e) => {
+          onChange={async (e) => {
             const f = e.target.files?.[0];
-            if (f) handleImageUpload(f);
+            if (!f) return;
+
+            setUploading(true);
+            const url = await uploadToCloudinary(f);
+            setImageUrl(url);
+            setUploading(false);
           }}
         />
 
-        {imageBase64 && (
+        {uploading && (
+          <p className="text-sm text-slate-500 mt-2">Uploading image…</p>
+        )}
+
+        {imageUrl && (
           <img
-            src={imageBase64}
+            src={imageUrl}
             className="mt-4 max-h-56 rounded border"
           />
         )}
       </Section>
+
 
       {/* PUBLISH */}
       <label className="flex items-center gap-2 text-sm">

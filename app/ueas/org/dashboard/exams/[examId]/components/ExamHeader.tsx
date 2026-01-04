@@ -9,6 +9,8 @@ export default function ExamHeader({
   exam: any;
   onAssignBatches: () => void;
 }) {
+  const isCompleted = exam.status === "completed";
+
   return (
     <div className="bg-white border rounded-xl p-6 mb-6">
 
@@ -47,10 +49,22 @@ export default function ExamHeader({
 
           {/* ASSIGN BATCHES */}
           <button
-            onClick={onAssignBatches}
-            className="rounded-lg border px-4 py-2
+            onClick={() => {
+              if (!isCompleted) onAssignBatches();
+            }}
+            disabled={isCompleted}
+            title={
+              isCompleted
+                ? "Cannot assign batches after exam completion"
+                : "Assign batches to this exam"
+            }
+            className={`rounded-lg border px-4 py-2
                        text-sm font-medium
-                       hover:bg-slate-50"
+                       ${
+                         isCompleted
+                           ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                           : "hover:bg-slate-50"
+                       }`}
           >
             + Assign Batches
           </button>
@@ -96,7 +110,7 @@ function StatusBadge({ status }: { status?: string }) {
   const styles: Record<string, string> = {
     draft: "bg-slate-100 text-slate-600",
     scheduled: "bg-blue-100 text-blue-700",
-    ongoing: "bg-yellow-100 text-yellow-700",
+    active: "bg-yellow-100 text-yellow-700",
     completed: "bg-green-100 text-green-700",
   };
 

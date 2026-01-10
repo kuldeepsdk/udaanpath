@@ -115,6 +115,18 @@ export default async function ProtectedLayout({
           >
             💰 UEAS
           </a>
+            <a
+            href="/secure-console/expected-jobs"
+            className="block px-3 py-2 rounded hover:bg-slate-800"
+          >
+            ⏳ Expected Jobs
+          </a>
+            <a
+            href="/secure-console/source-alerts"
+            className="block px-3 py-2 rounded hover:bg-slate-800"
+          >
+            🚨 Source Alerts
+          </a>
 
         </nav>
       </aside>

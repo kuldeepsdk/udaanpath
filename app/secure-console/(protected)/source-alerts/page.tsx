@@ -106,7 +106,7 @@ export default async function SourceAlertsPage() {
             {alerts.length === 0 && (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={5}
                   className="p-6 text-center text-slate-500"
                 >
                   No alerts found
@@ -115,11 +115,18 @@ export default async function SourceAlertsPage() {
             )}
 
             {alerts.map((a: any) => (
-              <tr key={a.id} className="border-t">
+              <tr
+                key={a.id}
+                className={`border-t ${
+                  a.is_resolved ? "bg-slate-50 opacity-60" : ""
+                }`}
+              >
+                {/* Source */}
                 <td className="p-3 font-medium">
                   {a.source_name}
                 </td>
 
+                {/* Type */}
                 <td className="p-3">
                   <span
                     className={`px-2 py-0.5 rounded text-xs font-medium ${
@@ -134,14 +141,35 @@ export default async function SourceAlertsPage() {
                   </span>
                 </td>
 
-                <td className="p-3">{a.message}</td>
+                {/* Message */}
+                <td className="p-3">
+                  {a.message}
+                </td>
 
+                {/* Detected */}
                 <td className="p-3 text-xs text-slate-500">
                   {new Date(a.detected_at).toLocaleString()}
+                </td>
+
+                {/* Action */}
+                <td className="p-3">
+                  {a.is_resolved ? (
+                    <span className="text-xs text-emerald-600 font-medium">
+                      Resolved
+                    </span>
+                  ) : (
+                    <a
+                      href={`/secure-console/source-alerts/${a.id}`}
+                      className="text-blue-600 text-sm font-medium hover:underline"
+                    >
+                      View & Map →
+                    </a>
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
+
         </table>
       </div>
     </div>

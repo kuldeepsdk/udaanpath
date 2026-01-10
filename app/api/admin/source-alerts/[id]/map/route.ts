@@ -4,32 +4,41 @@ import { getDB } from "@/lib/db";
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const auth = await validateAdminApi(req);
   if (!auth.ok) return auth.response;
 
-  const alertId = Number(params.id);
+  const { id } = await context.params;
+  const alertId = Number(id);
+
+  if (!alertId) {
+    return NextResponse.json(
+      { success: false, error: "Invalid alert id" },
+      { status: 400 }
+    );
+  }
+
   const body = await req.json();
   const jobId = Number(body.job_id);
 
-  if (!alertId || !jobId) {
+  if (!jobId) {
     return NextResponse.json(
-      { success: false, error: "Invalid input" },
+      { success: false, error: "Invalid job id" },
       { status: 400 }
     );
   }
 
   const db = await getDB();
 
-  // 1️⃣ Mark expected job released
+  // 1️⃣ Release expected job
   await db.execute(
     `
     UPDATE expected_jobs
     SET status = 'released',
         published_at = NOW()
     WHERE id = ?
-  `,
+    `,
     [jobId]
   );
 
@@ -41,12 +50,12 @@ export async function POST(
         mapped_job_id = ?,
         resolved_at = NOW()
     WHERE id = ?
-  `,
+    `,
     [jobId, alertId]
   );
 
   return NextResponse.json({
     success: true,
-    message: "Alert mapped & job released",
+    message: "Alert mapped and job released",
   });
 }

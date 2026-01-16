@@ -23,6 +23,8 @@
 # misc
 .DS_Store
 *.pem
+# allow AWS RDS CA bundle
+!global-bundle.pem
 
 # debug
 npm-debug.log*

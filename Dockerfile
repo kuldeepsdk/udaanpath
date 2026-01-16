@@ -16,9 +16,8 @@ FROM node:20-alpine
 WORKDIR /app
 ENV NODE_ENV=production
 
-# 🔐 Copy AWS RDS CA bundle
-COPY global-bundle.pem ./global-bundle.pem
-
+# 🔐 Copy AWS RDS CA bundle from builder (FIX)
+COPY --from=builder /app/global-bundle.pem ./global-bundle.pem
 
 # App files
 COPY --from=builder /app/package*.json ./

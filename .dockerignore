@@ -2,8 +2,4 @@ node_modules
 .next
 .git
 .env*
-Dockerfile
 README.md
-
-# allow AWS RDS CA cert
-!global-bundle.pem

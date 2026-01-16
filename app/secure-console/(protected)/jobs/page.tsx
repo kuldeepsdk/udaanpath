@@ -1,18 +1,55 @@
+/* =====================================================
+   Force dynamic rendering (important for admin pages)
+===================================================== */
+export const dynamic = "force-dynamic";
+
 import { fetchAdminJobs } from "@/app/actions/admin/jobs.list.action";
 import JobStatusToggle from "./JobStatusToggle";
 import DeleteJobButton from "./DeleteJobButton";
 
+type SearchParams = Promise<{
+  [key: string]: string | string[] | undefined;
+}>;
+
 export default async function AdminJobsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: SearchParams;
 }) {
+  /* ===============================
+     1️⃣ Await searchParams (KEY FIX)
+  =============================== */
   const params = await searchParams;
-  const page = Math.max(Number(params.page || 1), 1);
 
-  const response = await fetchAdminJobs({ page, limit: 10 });
-  const jobs = response.data || [];
-  const meta = response.meta;
+  const rawPage = params?.page;
+
+  const page =
+    typeof rawPage === "string" && !isNaN(Number(rawPage))
+      ? Math.max(Number(rawPage), 1)
+      : 1;
+
+  const limit = 10;
+
+  console.log("AdminJobsPage - page:", page);
+
+  /* ===============================
+     2️⃣ Fetch jobs
+  =============================== */
+  const response = await fetchAdminJobs({ page, limit });
+  const jobs = response?.data || [];
+  const meta = response?.meta;
+
+  const totalPages = meta?.totalPages || 1;
+  const hasPrev = page > 1;
+  const hasNext = page < totalPages;
+
+  /* ===============================
+     3️⃣ Pagination numbers (max 5)
+  =============================== */
+  const startPage = Math.max(1, page - 2);
+  const visiblePages = Array.from({ length: 5 }, (_, i) => startPage + i).filter(
+    (p) => p <= totalPages
+  );
 
   return (
     <div className="space-y-8">
@@ -52,7 +89,10 @@ export default async function AdminJobsPage({
           <tbody>
             {jobs.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-6 text-center text-slate-500">
+                <td
+                  colSpan={6}
+                  className="px-4 py-6 text-center text-slate-500"
+                >
                   No vacancies found
                 </td>
               </tr>
@@ -102,24 +142,39 @@ export default async function AdminJobsPage({
       </div>
 
       {/* Pagination */}
-      {meta && (
+      {totalPages > 1 && (
         <div className="flex items-center justify-between text-sm">
           <span className="text-slate-500">
-            Page {meta.page} of {meta.totalPages}
+            Page {page} of {totalPages}
           </span>
 
-          <div className="space-x-2">
-            {meta.hasPrev && (
+          <div className="flex items-center space-x-1">
+            {hasPrev && (
               <a
-                href={`/secure-console/jobs?page=${meta.page - 1}`}
+                href={`/secure-console/jobs?page=${page - 1}`}
                 className="px-3 py-1 border rounded hover:bg-slate-100"
               >
                 Prev
               </a>
             )}
-            {meta.hasNext && (
+
+            {visiblePages.map((p) => (
               <a
-                href={`/secure-console/jobs?page=${meta.page + 1}`}
+                key={p}
+                href={`/secure-console/jobs?page=${p}`}
+                className={`px-3 py-1 border rounded ${
+                  p === page
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "hover:bg-slate-100"
+                }`}
+              >
+                {p}
+              </a>
+            ))}
+
+            {hasNext && (
+              <a
+                href={`/secure-console/jobs?page=${page + 1}`}
                 className="px-3 py-1 border rounded hover:bg-slate-100"
               >
                 Next

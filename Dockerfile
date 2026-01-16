@@ -9,12 +9,17 @@ RUN npm install
 COPY . .
 RUN npm run build
 
+
 # ---------- Runner ----------
 FROM node:20-alpine
 
 WORKDIR /app
 ENV NODE_ENV=production
 
+# 🔐 Copy AWS RDS CA bundle
+COPY --from=builder /app/global-bundle.pem ./global-bundle.pem
+
+# App files
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public

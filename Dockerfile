@@ -17,7 +17,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 # 🔐 Copy AWS RDS CA bundle
-COPY --from=builder /app/global-bundle.pem ./global-bundle.pem
+COPY global-bundle.pem ./global-bundle.pem
+
 
 # App files
 COPY --from=builder /app/package*.json ./

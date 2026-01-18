@@ -1,8 +1,10 @@
 // app/sitemap.ts
 import { MetadataRoute } from "next";
+import { SITE_CONFIG } from "@/config/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://udaanpath.com";
+  const baseUrl = SITE_CONFIG.seo.siteUrl;
+  const now = new Date();
 
   const staticPages = [
     "/",
@@ -17,39 +19,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/disclaimer",
   ];
 
-  const toolPages = [
-    "/tools/photo-resize",
-    "/tools/photo-signature",
-    "/tools/signature-resize",
-    "/tools/image-crop",
-    "/tools/passport-photo",
-  ];
-
-  const now = new Date().toISOString();
-
   return [
-    // Homepage (highest priority)
-    {
-      url: `${baseUrl}/`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 1.0,
-    },
-
-    // Main static pages
     ...staticPages.map((path) => ({
       url: `${baseUrl}${path}`,
       lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
+      changeFrequency: "weekly" as const, // ✅ FIX
+      priority: path === "/" ? 1.0 : 0.8,
     })),
 
-    // Tools (SEO gold for AdSense)
-    ...toolPages.map((path) => ({
-      url: `${baseUrl}${path}`,
+    {
+      url: `${baseUrl}/sitemap.xml`,
       lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.7,
-    })),
+      changeFrequency: "daily" as const, // ✅ FIX
+      priority: 0.9,
+    },
   ];
 }

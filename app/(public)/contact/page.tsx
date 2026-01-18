@@ -1,7 +1,7 @@
 export const metadata = {
   title: "Contact Us | UdaanPath",
   description:
-    "Contact UdaanPath for support, feedback, corrections, collaborations, or advertising opportunities.",
+    "Contact UdaanPath for support, corrections, feedback, collaborations, or advertising inquiries. We usually respond within 24–48 hours.",
 };
 
 export default function ContactPage() {
@@ -12,66 +12,65 @@ export default function ContactPage() {
         {/* ================= Header ================= */}
         <div className="bg-white border rounded-3xl p-6 sm:p-8 shadow-sm text-center">
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
-            📞 Contact Us <span className="text-slate-400">|</span> संपर्क करें
+            📞 Contact UdaanPath <span className="text-slate-400">|</span> संपर्क करें
           </h1>
 
           <p className="mt-4 text-sm sm:text-base text-slate-600 leading-relaxed">
-            Have a question, feedback, correction, or collaboration proposal?  
+            We’re here to help you with corrections, feedback, and general support.
             <br />
             <span className="text-slate-500">
-              कोई सवाल, सुझाव, सुधार या सहयोग से जुड़ी जानकारी चाहिए?
+              हम सुधार, सुझाव और सामान्य सहायता के लिए उपलब्ध हैं।
             </span>
           </p>
-
-          <div className="mt-4 flex flex-wrap justify-center gap-2">
-            <span className="px-3 py-1 text-xs rounded-full bg-green-50 text-green-700 border border-green-100">
-              Trusted Platform
-            </span>
-            <span className="px-3 py-1 text-xs rounded-full bg-blue-50 text-blue-700 border border-blue-100">
-              Govt Updates
-            </span>
-            <span className="px-3 py-1 text-xs rounded-full bg-slate-100 text-slate-700 border">
-              Fast Support
-            </span>
-          </div>
         </div>
 
-        {/* ================= Intro ================= */}
-        <Section title="💬 How Can We Help You? | हम कैसे मदद कर सकते हैं">
+        {/* ================= Trust ================= */}
+        <Section title="🏷️ Platform Information | प्लेटफ़ॉर्म जानकारी">
           <p>
-            <strong>UdaanPath</strong> is dedicated to delivering accurate and timely updates related to
-            Government Jobs, Admit Cards, Results, Admissions, and other important notifications.
+            <strong>UdaanPath</strong> is an independent informational and tools platform
+            operated from India. We provide verified government job updates,
+            exam tools, and educational resources.
           </p>
           <p className="text-slate-500">
-            <strong>UdaanPath</strong> सरकारी नौकरियों, एडमिट कार्ड, रिजल्ट, एडमिशन और अन्य महत्वपूर्ण
-            सूचनाओं की विश्वसनीय जानकारी समय पर उपलब्ध कराता है।
+            यह एक स्वतंत्र भारतीय प्लेटफ़ॉर्म है जो सरकारी नौकरियों और शिक्षा से जुड़ी जानकारी देता है।
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+            <MiniStat label="Operating Country" value="India 🇮🇳" />
+            <MiniStat label="Response Time" value="24–48 hrs" />
+            <MiniStat label="Support Type" value="Email Support" />
+          </div>
+        </Section>
+
+        {/* ================= What We Handle ================= */}
+        <Section title="💬 How We Can Help | हम कैसे मदद कर सकते हैं">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <InfoBox
               title="You can contact us for"
-              subtitle="आप हमसे इन विषयों पर संपर्क कर सकते हैं"
+              subtitle="आप इन विषयों पर संपर्क कर सकते हैं"
               items={[
                 "Wrong or outdated job information",
-                "Suggestions or feature requests",
-                "Feedback about content quality",
-                "Collaboration or advertising inquiries",
+                "Website errors or broken links",
+                "Feedback or suggestions",
+                "Business or advertising inquiries",
               ]}
             />
+
             <InfoBox
-              title="What we don't handle"
-              subtitle="हम किन चीज़ों के लिए ज़िम्मेदार नहीं हैं"
+              title="We cannot help with"
+              subtitle="हम इनमें सहायता नहीं कर सकते"
               items={[
-                "Individual application status",
-                "Government form filling issues",
-                "Personal exam or result disputes",
+                "Government form filling",
+                "Exam application status",
+                "Personal result disputes",
+                "Official authority decisions",
               ]}
             />
           </div>
         </Section>
 
-        {/* ================= Contact Details ================= */}
-        <Section title="📌 Contact Details | संपर्क विवरण">
+        {/* ================= Contact Channels ================= */}
+        <Section title="📌 Official Contact Channels | आधिकारिक संपर्क">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
             <ContactCard
@@ -79,68 +78,56 @@ export default function ContactPage() {
               title="Email Support"
               value="support@udaanpath.com"
               link="mailto:support@udaanpath.com"
-              note="For feedback, corrections & general queries"
+              note="For support, corrections & feedback"
+            />
+
+            <ContactCard
+              icon="📢"
+              title="Advertising / Collaboration"
+              value="support@udaanpath.com"
+              link="mailto:support@udaanpath.com"
+              note="For partnerships & promotions"
             />
 
             <ContactCard
               icon="🌐"
-              title="Website"
+              title="Official Website"
               value="https://udaanpath.com"
               link="https://udaanpath.com"
-              note="Official portal"
+              note="Verified platform"
             />
 
             <ContactCard
               icon="📲"
               title="WhatsApp Channel"
-              value="Join for Daily Updates"
+              value="Join for daily updates"
               link="https://whatsapp.com/channel/0029VbBG8135PO0sX5HVPZ1p"
               note="Jobs • Admit Cards • Results"
             />
-
-            <ContactCard
-              icon="📘"
-              title="Facebook Page"
-              value="UdaanPath on Facebook"
-              link="https://www.facebook.com/people/Udaanpath/61578611136906/"
-              note="Follow for announcements"
-            />
           </div>
         </Section>
 
-        {/* ================= Response Time ================= */}
-        <Section title="⏱ Response Time | उत्तर समय">
+        {/* ================= Working Hours ================= */}
+        <Section title="⏱️ Support Hours | सहायता समय">
           <div className="rounded-2xl border bg-emerald-50/60 p-5">
             <p className="text-sm text-emerald-900 font-medium">
-              💬 We usually respond within <strong>24–48 hours</strong>.
+              🕒 Support Hours: Monday – Saturday (10:00 AM – 6:00 PM IST)
             </p>
             <p className="text-sm text-emerald-800 mt-1">
-              💬 हम सामान्यतः <strong>24–48 घंटों</strong> के भीतर उत्तर देते हैं।
-            </p>
-
-            <p className="mt-3 text-sm text-slate-600">
-              Please include complete details and relevant links/screenshots (if any) for faster resolution.
-              <span className="block text-slate-500">
-                तेज़ समाधान के लिए पूरी जानकारी और संबंधित लिंक/स्क्रीनशॉट साझा करें।
-              </span>
+              सामान्यतः 24–48 घंटों में उत्तर दिया जाता है।
             </p>
           </div>
         </Section>
 
-        {/* ================= Business & Ads ================= */}
-        <Section title="🤝 Business & Advertising | व्यवसाय और विज्ञापन">
+        {/* ================= Legal ================= */}
+        <Section title="⚖️ Legal Notice | कानूनी सूचना">
           <p>
-            For <strong>collaborations, sponsored listings, affiliate partnerships, or digital advertising</strong>,
-            please contact us via email.
+            UdaanPath is not affiliated with any government organization.
+            All information is provided for educational and informational purposes only.
           </p>
           <p className="text-slate-500">
-            यदि आप <strong>कोलैबोरेशन, स्पॉन्सर्ड लिस्टिंग, अफिलिएट पार्टनरशिप या डिजिटल विज्ञापन</strong>
-            में रुचि रखते हैं, तो ईमेल द्वारा संपर्क करें।
+            कृपया आधिकारिक जानकारी के लिए संबंधित सरकारी वेबसाइट देखें।
           </p>
-
-          <div className="mt-4 rounded-2xl border bg-slate-50 p-4 text-sm text-slate-600">
-            📩 <strong>Email Subject:</strong> <em>Collaboration</em>
-          </div>
         </Section>
 
       </div>
@@ -223,5 +210,14 @@ function ContactCard({
         </div>
       )}
     </a>
+  );
+}
+
+function MiniStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border bg-white p-4 text-center">
+      <div className="text-xs text-slate-500">{label}</div>
+      <div className="text-sm font-semibold text-slate-900 mt-1">{value}</div>
+    </div>
   );
 }

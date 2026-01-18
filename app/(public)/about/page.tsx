@@ -1,7 +1,7 @@
 export const metadata = {
-  title: "About Us | UdaanPath",
+  title: "About Us | UdaanPath – Trusted Government Job & Education Platform",
   description:
-    "Learn about UdaanPath – a trusted Indian platform for government jobs, results, admissions, education, and AI-powered career resources.",
+    "UdaanPath is an independent Indian platform providing verified government job updates, exam tools, results, admissions and education resources for students and job aspirants.",
 };
 
 export default function AboutPage() {
@@ -12,23 +12,23 @@ export default function AboutPage() {
         {/* ================= Header ================= */}
         <div className="bg-white border rounded-3xl p-6 sm:p-8 shadow-sm text-center">
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
-            📘 About Us <span className="text-slate-400">|</span> हमारे बारे में
+            About UdaanPath <span className="text-slate-400">|</span> हमारे बारे में
           </h1>
 
           <p className="mt-4 text-sm sm:text-base text-slate-600 leading-relaxed">
-            Empowering students, job aspirants & learners across India
-            with verified and simplified information.
+            A transparent, independent, and student-first digital platform
+            built to simplify government job & education information in India.
           </p>
 
           <div className="mt-4 flex flex-wrap justify-center gap-2">
-            <span className="px-3 py-1 text-xs rounded-full bg-green-50 text-green-700 border border-green-100">
-              Trusted Platform
+            <span className="px-3 py-1 text-xs rounded-full bg-green-50 text-green-700 border">
+              Independent Platform
             </span>
-            <span className="px-3 py-1 text-xs rounded-full bg-blue-50 text-blue-700 border border-blue-100">
-              Govt Updates
+            <span className="px-3 py-1 text-xs rounded-full bg-blue-50 text-blue-700 border">
+              Verified Information
             </span>
-            <span className="px-3 py-1 text-xs rounded-full bg-purple-50 text-purple-700 border border-purple-100">
-              AI-Powered Learning
+            <span className="px-3 py-1 text-xs rounded-full bg-purple-50 text-purple-700 border">
+              Free Student Tools
             </span>
           </div>
         </div>
@@ -36,120 +36,121 @@ export default function AboutPage() {
         {/* ================= Who We Are ================= */}
         <Section title="🌟 Who We Are | हम कौन हैं">
           <p>
-            <strong>UdaanPath</strong> is a modern Indian digital platform built to
-            help students, job aspirants, and learners stay informed about
-            Government Jobs, Results, Admit Cards, Admissions, and career opportunities.
+            <strong>UdaanPath</strong> is an independent Indian digital platform
+            created to help students, job aspirants, and learners easily access
+            verified information related to government jobs, exams, results,
+            admissions, and education resources.
           </p>
 
           <p className="text-slate-500">
-            <strong>UdaanPath</strong> एक आधुनिक भारतीय डिजिटल प्लेटफ़ॉर्म है,
-            जो छात्रों, नौकरी की तैयारी करने वाले अभ्यर्थियों और सीखने वालों को
-            सरकारी नौकरियों, रिजल्ट, एडमिट कार्ड, एडमिशन और करियर अवसरों की
-            विश्वसनीय जानकारी प्रदान करता है।
+            UdaanPath एक स्वतंत्र भारतीय डिजिटल प्लेटफ़ॉर्म है जो छात्रों और
+            नौकरी की तैयारी करने वाले युवाओं को सरकारी नौकरियों, परीक्षाओं,
+            रिज़ल्ट, एडमिशन और शिक्षा से जुड़ी जानकारी सरल भाषा में उपलब्ध कराता है।
           </p>
 
           <p>
-            We focus on <strong>accuracy, clarity, and accessibility</strong> —
-            ensuring that complex official notifications are presented in a
-            simple and understandable format.
+            We are not a coaching institute, agency, or government body. We work
+            purely as an <strong>information and tools platform</strong>.
           </p>
         </Section>
 
-        {/* ================= What We Offer ================= */}
-        <Section title="💡 What We Offer | हम क्या प्रदान करते हैं">
+        {/* ================= What We Do ================= */}
+        <Section title="💡 What We Do | हम क्या करते हैं">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
             <OfferBox
-              title="For Job Aspirants"
+              title="Verified Government Updates"
               items={[
-                "Latest Sarkari Job notifications",
-                "Admit Card & Result updates",
-                "Admission alerts for colleges & universities",
-                "Vacancy details, dates & official links",
+                "Latest government job notifications",
+                "Result, admit card & exam date updates",
+                "Official links to gov.in, nic.in, ac.in sources",
+                "Clear and simplified explanations",
               ]}
             />
 
             <OfferBox
-              title="For Learners & Students"
+              title="Free Exam Form Tools"
               items={[
-                "Educational blogs & exam strategies",
-                "AI-powered learning tools",
-                "Exam-specific guidance (SSC, Banking, Railways, etc.)",
-                "Career awareness & planning resources",
+                "Photo resize & crop tools",
+                "Signature resize tools",
+                "Passport photo tools",
+                "Mobile-friendly, no upload tools",
               ]}
             />
 
             <OfferBox
-              title="For Rural & General Public"
+              title="Education & Career Guidance"
               items={[
-                "Daily Mandi Bhav updates",
+                "Exam preparation blogs",
+                "Career awareness content",
+                "Course & skill guidance",
+                "Student-friendly resources",
+              ]}
+            />
+
+            <OfferBox
+              title="Public Information"
+              items={[
+                "Daily mandi bhav updates",
                 "Government scheme awareness",
-                "Simplified public information",
+                "General information services",
               ]}
             />
-
-            <OfferBox
-              title="Community Features"
-              items={[
-                "Public opinion polls",
-                "Trend analysis & insights",
-                "WhatsApp & social media updates",
-              ]}
-            />
-
           </div>
         </Section>
 
-        {/* ================= Vision & Mission ================= */}
-        <Section title="🚀 Vision & Mission | हमारा उद्देश्य">
-          <div className="space-y-4">
-            <p>
-              🌟 <strong>Our Vision</strong> is to become one of India’s most trusted
-              digital destinations for verified government and education-related information.
-            </p>
-
-            <p className="text-slate-500">
-              🌟 हमारा विज़न है भारत का सबसे भरोसेमंद डिजिटल प्लेटफ़ॉर्म बनना,
-              जहाँ सरकारी और शिक्षा से जुड़ी प्रमाणिक जानकारी उपलब्ध हो।
-            </p>
-
-            <p>
-              🎯 <strong>Our Mission</strong> is to reduce confusion, save time,
-              and empower users with correct information — especially for those
-              coming from small towns and rural areas.
-            </p>
-
-            <p className="text-slate-500">
-              🎯 हमारा मिशन है भ्रम को कम करना, समय बचाना और
-              खासकर छोटे शहरों व ग्रामीण क्षेत्रों के छात्रों को
-              सही जानकारी से सशक्त बनाना।
-            </p>
-          </div>
-        </Section>
-
-        {/* ================= Trust & Disclaimer ================= */}
-        <Section title="🔐 Trust & Transparency | भरोसा और पारदर्शिता">
+        {/* ================= Vision ================= */}
+        <Section title="🚀 Our Vision & Mission | उद्देश्य">
           <p>
-            UdaanPath is an <strong>informational platform</strong>.
-            We are not affiliated with any government organization.
+            🌟 <strong>Vision:</strong> To become one of India’s most trusted
+            digital platforms for government job & education information.
+          </p>
+
+          <p>
+            🎯 <strong>Mission:</strong> To reduce confusion, save time, and
+            empower students and job aspirants—especially from small towns and
+            rural areas—with accurate and easy-to-understand information.
+          </p>
+        </Section>
+
+        {/* ================= Transparency ================= */}
+        <Section title="🔐 Transparency & Disclaimer | पारदर्शिता">
+          <p>
+            UdaanPath is an <strong>independent informational platform</strong>.
+            We are not affiliated with any government organization, board, or
+            recruitment agency.
           </p>
 
           <p className="text-slate-500">
-            UdaanPath एक जानकारी प्रदान करने वाला प्लेटफ़ॉर्म है।
-            हमारा किसी भी सरकारी संस्था से प्रत्यक्ष संबंध नहीं है।
+            हम किसी भी सरकारी संस्था से संबद्ध नहीं हैं। सभी उपयोगकर्ताओं को
+            आधिकारिक वेबसाइटों से जानकारी की पुष्टि करने की सलाह दी जाती है।
           </p>
 
           <p>
-            Users are always encouraged to verify details from
-            <strong> official government websites</strong>.
+            All information is collected from official sources and presented in
+            simplified form for educational and informational purposes only.
           </p>
         </Section>
 
-        {/* ================= Connect ================= */}
-        <Section title="🤝 Connect With Us | हमसे जुड़ें">
+        {/* ================= Who Runs ================= */}
+        <Section title="👤 Who Runs UdaanPath | प्लेटफ़ॉर्म संचालक">
           <p>
-            Have feedback, suggestions, or collaboration ideas?
-            We’d love to hear from you.
+            UdaanPath is managed by an independent Indian development team
+            focused on building digital tools and information platforms for
+            students and job seekers.
+          </p>
+
+          <p className="text-slate-500">
+            Our team has experience in software development, education content,
+            and public information systems. We believe in transparency,
+            accuracy, and user trust.
+          </p>
+        </Section>
+
+        {/* ================= Contact ================= */}
+        <Section title="🤝 Contact & Communication | संपर्क">
+          <p>
+            For feedback, corrections, or suggestions, feel free to contact us.
+            We respond to all genuine queries.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-4">
@@ -161,23 +162,13 @@ export default function AboutPage() {
             </a>
 
             <a
-              href="https://whatsapp.com/channel/0029VbBG8135PO0sX5HVPZ1p"
-              target="_blank"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 text-white px-5 py-3 text-sm font-medium hover:bg-green-700"
+              href="mailto:support@udaanpath.com"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border px-5 py-3 text-sm font-medium hover:bg-slate-50"
             >
-              📲 Join WhatsApp Channel
-            </a>
-
-            <a
-              href="https://www.facebook.com/people/Udaanpath/61578611136906/"
-              target="_blank"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 text-white px-5 py-3 text-sm font-medium hover:bg-blue-700"
-            >
-              👍 Follow on Facebook
+              ✉️ support@udaanpath.com
             </a>
           </div>
         </Section>
-
       </div>
     </div>
   );
@@ -191,7 +182,7 @@ function Section({
 }: {
   title: string;
   children: React.ReactNode;
-}) {
+})  {
   return (
     <section className="bg-white border rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
       <h2 className="text-lg sm:text-xl font-semibold text-slate-900">
@@ -204,13 +195,7 @@ function Section({
   );
 }
 
-function OfferBox({
-  title,
-  items,
-}: {
-  title: string;
-  items: string[];
-}) {
+function OfferBox({ title, items }: { title: string; items: string[] }) {
   return (
     <div className="rounded-2xl border bg-slate-50/60 p-4">
       <div className="text-sm font-semibold text-slate-900 mb-2">

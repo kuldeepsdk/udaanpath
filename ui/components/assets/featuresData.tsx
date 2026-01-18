@@ -1,24 +1,34 @@
-import { ShieldCheck, Languages, NotebookPen, BellRing } from "lucide-react";
+import {
+  ShieldCheck,
+  Languages,
+  NotebookPen,
+  BellRing,
+  Wrench,
+  Lock,
+  Zap,
+  Globe,
+} from "lucide-react";
 
 export const featuresData = [
   {
     icon: ShieldCheck,
-    title: "Trusted & Accurate",
-    desc: "Latest verified job updates, results, and official notifications every day.",
+    title: "Trusted & Official Updates",
+    desc: "Latest verified government job notifications, results and admit cards from official sources.",
   },
   {
-    icon: Languages,
-    title: "Multi-Language Support",
-    desc: "Understand career information easily with multi-language support.",
+    icon: Wrench,
+    title: "Free Exam Tools",
+    desc: "Photo resize, signature resize, crop image and passport photo tools for exam forms.",
+    href: "/tools",
   },
   {
-    icon: NotebookPen,
-    title: "Smart Courses",
-    desc: "Free short courses & learning modules designed for India’s youth.",
+    icon: Lock,
+    title: "100% Private & Secure",
+    desc: "Your photos and documents never leave your device. No upload, no tracking.",
   },
   {
-    icon: BellRing,
-    title: "Instant Alerts",
-    desc: "Get real-time notifications for jobs, results, admit cards & more.",
+    icon: Zap,
+    title: "Fast & Mobile Friendly",
+    desc: "All tools work smoothly on mobile phones with instant results.",
   },
 ];

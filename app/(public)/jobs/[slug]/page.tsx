@@ -310,6 +310,9 @@ export default async function JobDetailPage({
           </ul>
         </Section>
       )}
+
+      {/* ================= DISCLAIMER ================= */}
+      <JobDisclaimer />
     </div>
 
     {/* ================= MOBILE STICKY CTA ================= */}
@@ -322,6 +325,9 @@ export default async function JobDetailPage({
         📲 Share Job on WhatsApp
       </a>
     </div>
+
+
+    
   </>
 );
 
@@ -433,6 +439,35 @@ function Stat({ label, value }: { label: string; value: string }) {
     <div className="bg-slate-50 rounded-xl p-4 text-center">
       <div className="text-sm text-slate-500">{label}</div>
       <div className="font-bold text-slate-900 text-lg">{value}</div>
+    </div>
+  );
+}
+function JobDisclaimer() {
+  return (
+    <div className="bg-amber-50/60 border border-amber-200 rounded-3xl p-6 text-sm text-amber-900 space-y-3">
+      <h3 className="font-semibold text-base">⚠️ Disclaimer</h3>
+
+      <p>
+        UdaanPath is an <strong>independent information platform</strong>. We are
+        not affiliated with any government department, recruitment board, or
+        organization.
+      </p>
+
+      <p className="text-amber-800">
+        All job details are collected from official sources such as government
+        websites, notifications, and public notices. Candidates are strongly
+        advised to verify all information from the official website before
+        applying.
+      </p>
+
+      <p className="text-amber-800">
+        UdaanPath does not charge any money for job applications and does not
+        guarantee recruitment.
+      </p>
+
+      <p className="text-xs text-amber-700">
+        👉 Official links are always provided above for verification.
+      </p>
     </div>
   );
 }

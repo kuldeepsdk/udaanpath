@@ -2,6 +2,8 @@
 
 export const metadata = {
   title: "Privacy Policy | UdaanPath",
+  description:
+    "Privacy policy explaining how UdaanPath collects, uses, and protects user data in compliance with Google AdSense and data protection guidelines.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -9,246 +11,146 @@ export default function PrivacyPolicyPage() {
     <div className="bg-slate-50/40">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12 space-y-8">
 
-        {/* Header */}
+        {/* ================= Header ================= */}
         <div className="bg-white border rounded-3xl p-6 sm:p-8 shadow-sm">
-          <div className="flex flex-col gap-3">
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
-              🔒 Privacy Policy <span className="text-slate-400">|</span> गोपनीयता नीति
-            </h1>
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-              Your privacy is important to us. This policy explains how we collect, use, and protect your data when you use UdaanPath.
-              <br />
-              <span className="text-slate-500">
-                आपकी गोपनीयता हमारे लिए महत्वपूर्ण है। यह नीति बताती है कि UdaanPath इस्तेमाल करते समय आपकी जानकारी कैसे एकत्रित, उपयोग और सुरक्षित की जाती है।
-              </span>
-            </p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
+            🔒 Privacy Policy <span className="text-slate-400">|</span> गोपनीयता नीति
+          </h1>
 
-            <div className="flex flex-wrap gap-2 pt-2">
-              <span className="px-3 py-1 text-xs rounded-full bg-blue-50 text-blue-700 border border-blue-100">
-                Transparent
-              </span>
-              <span className="px-3 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
-                Secure
-              </span>
-              <span className="px-3 py-1 text-xs rounded-full bg-slate-100 text-slate-700 border">
-                User-first
-              </span>
-            </div>
-          </div>
+          <p className="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">
+            This page explains how UdaanPath collects, uses, and protects your
+            information when you visit or use our services.
+          </p>
         </div>
 
-        {/* Quick Summary */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <MiniCard
-            title="What we collect"
-            subtitle="हम क्या एकत्र करते हैं"
-            points={[
-              "Name & email (only if you contact/subscribe)",
-              "Usage analytics (pages, device, time)",
-              "Poll / blog interactions",
-            ]}
-          />
-          <MiniCard
-            title="Why we collect"
-            subtitle="क्यों एकत्र करते हैं"
-            points={[
-              "Improve accuracy & experience",
-              "Send updates if subscribed",
-              "Understand demand & trends",
-            ]}
-          />
-          <MiniCard
-            title="Your control"
-            subtitle="आपका नियंत्रण"
-            points={[
-              "Request access/deletion",
-              "Unsubscribe anytime",
-              "Contact us for help",
-            ]}
-          />
-        </div>
+        {/* ================= Intro ================= */}
+        <Section title="📌 Overview | संक्षेप में">
+          <p>
+            UdaanPath is an independent informational and tools platform for
+            government job aspirants and students. We respect your privacy and
+            are committed to protecting it.
+          </p>
+          <p className="text-slate-500">
+            हम आपकी गोपनीयता का सम्मान करते हैं और आपकी जानकारी को सुरक्षित
+            रखने के लिए प्रतिबद्ध हैं।
+          </p>
+        </Section>
 
-        {/* Sections */}
+        {/* ================= Information ================= */}
         <Section title="📥 Information We Collect | हम क्या जानकारी एकत्र करते हैं">
-          <p className="text-slate-600 leading-relaxed">
-            We may collect the following information to provide better content and a smoother experience.
-            <br />
-            <span className="text-slate-500">
-              बेहतर कंटेंट और अनुभव देने के लिए हम नीचे दी गई जानकारी एकत्र कर सकते हैं।
-            </span>
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3">
-            <InfoBox
-              title="Personal Information"
-              subtitle="व्यक्तिगत जानकारी"
-              items={[
-                "Name, email (only when you subscribe or contact us)",
-                "Optional details you voluntarily share in messages/forms",
-              ]}
-            />
-            <InfoBox
-              title="Usage & Interaction Data"
-              subtitle="उपयोग/इंटरेक्शन डेटा"
-              items={[
-                "Pages visited, time spent, device/browser type",
-                "Poll votes and blog interaction logs",
-              ]}
-            />
-          </div>
-
-          <div className="mt-4 rounded-2xl border bg-amber-50/60 p-4">
-            <div className="text-sm font-semibold text-amber-900">
-              We do NOT ask for sensitive financial identity data
-            </div>
-            <div className="text-sm text-amber-800 mt-1">
-              We don’t collect Aadhaar, PAN, bank account details, or card information.
-              <span className="block text-amber-700">
-                हम आधार, पैन, बैंक अकाउंट या कार्ड जैसी संवेदनशील जानकारी नहीं मांगते/संग्रहित करते।
-              </span>
-            </div>
-          </div>
-        </Section>
-
-        <Section title="🔐 How We Use Your Information | हम आपकी जानकारी का उपयोग कैसे करते हैं">
-          <p className="text-slate-600 leading-relaxed">
-            We use collected data only for legitimate purposes that help improve the platform.
-            <br />
-            <span className="text-slate-500">
-              हम आपकी जानकारी का उपयोग केवल UdaanPath को बेहतर बनाने और सही अपडेट देने के लिए करते हैं।
-            </span>
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3">
-            <InfoBox
-              title="Improve Content & Experience"
-              subtitle="कंटेंट और अनुभव बेहतर"
-              items={[
-                "Improve performance and page speed",
-                "Fix inaccuracies based on feedback",
-                "Enhance UI/UX using analytics trends",
-              ]}
-            />
-            <InfoBox
-              title="Communication"
-              subtitle="संचार"
-              items={[
-                "Reply to your queries/corrections",
-                "Send updates only if you subscribe",
-                "Provide important notifications where applicable",
-              ]}
-            />
-          </div>
-        </Section>
-
-        <Section title="👥 Third-Party Services | तृतीय पक्ष सेवाएं">
-          <p className="text-slate-600 leading-relaxed">
-            We may use third-party services such as analytics, advertising, and social sharing tools to run and improve the website.
-            These services may collect data according to their own privacy policies.
-            <br />
-            <span className="text-slate-500">
-              हम Google Analytics, AdSense और सोशल शेयरिंग टूल्स जैसी सेवाएँ उपयोग कर सकते हैं। ये सेवाएँ अपनी नीतियों के अनुसार डेटा एकत्र कर सकती हैं।
-            </span>
-          </p>
-
-          <ul className="list-disc pl-5 mt-3 space-y-1 text-sm text-slate-600">
-            <li>Google Analytics (traffic & usage understanding)</li>
-            <li>Google AdSense (ads personalization & measurement)</li>
-            <li>Social sharing tools (WhatsApp share, etc.)</li>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Name & email (only if you contact us or subscribe)</li>
+            <li>Device, browser, pages visited (via analytics)</li>
+            <li>Anonymous interaction data (polls, tools usage)</li>
           </ul>
 
-          <div className="mt-4 rounded-2xl border bg-slate-50 p-4">
-            <p className="text-sm text-slate-600">
-              Note: UdaanPath does not control how third-party services use your data. Please review their policies for details.
-              <span className="block text-slate-500">
-                नोट: तृतीय-पक्ष सेवाओं के डेटा उपयोग पर हमारा नियंत्रण नहीं होता। उनकी नीतियाँ देखना बेहतर है।
-              </span>
-            </p>
+          <div className="mt-4 rounded-xl bg-green-50 border p-4 text-sm">
+            <strong>We do NOT collect:</strong> Aadhaar, PAN, bank details,
+            card numbers, passwords, or OTPs.
           </div>
         </Section>
 
-        <Section title="🔗 External Links Disclaimer | बाहरी लिंक अस्वीकरण">
-          <p className="text-slate-600 leading-relaxed">
-            UdaanPath often links to official portals (government/organizations) for verification and the most accurate information.
-            We do not control external websites and are not responsible for their content or privacy practices.
-            <br />
-            <span className="text-slate-500">
-              UdaanPath सत्यापन के लिए आधिकारिक पोर्टल्स (सरकारी/संस्थागत) के लिंक देता है। बाहरी वेबसाइट्स की सामग्री/गोपनीयता नीति के लिए हम जिम्मेदार नहीं हैं।
-            </span>
+        {/* ================= Local Processing ================= */}
+        <Section title="🛠️ Local Tools Processing | ब्राउज़र पर ही प्रोसेसिंग">
+          <p>
+            All photo, signature, and document tools work locally in your
+            browser. Your files are never uploaded to our servers.
+          </p>
+          <p className="text-slate-500">
+            आपकी फ़ाइलें आपके डिवाइस पर ही प्रोसेस होती हैं, सर्वर पर अपलोड नहीं होतीं।
           </p>
         </Section>
 
-        <Section title="✅ Your Rights | आपके अधिकार">
-          <p className="text-slate-600 leading-relaxed">
-            You have full control over your personal information.
-            <br />
-            <span className="text-slate-500">
-              आपकी जानकारी पर आपका पूरा अधिकार है।
-            </span>
+        {/* ================= Cookies ================= */}
+        <Section title="🍪 Cookies & Tracking | कुकीज़">
+          <p>
+            UdaanPath uses cookies to improve experience, measure traffic, and
+            display relevant advertisements.
           </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3">
-            <InfoBox
-              title="Access / Deletion Requests"
-              subtitle="एक्सेस / डिलीट अनुरोध"
-              items={[
-                "Request access to what we have (if any)",
-                "Request deletion of your submitted data",
-              ]}
-            />
-            <InfoBox
-              title="Unsubscribe Anytime"
-              subtitle="कभी भी अनसब्सक्राइब"
-              items={[
-                "Stop email updates anytime (if subscribed)",
-                "You can reach out for assistance",
-              ]}
-            />
-          </div>
+          <ul className="list-disc pl-5 mt-2 space-y-1">
+            <li>Google Analytics (traffic & performance)</li>
+            <li>Google AdSense (ads personalization & measurement)</li>
+            <li>Session cookies (navigation stability)</li>
+          </ul>
         </Section>
 
-        <Section title="📅 Policy Updates | नीति में बदलाव">
-          <p className="text-slate-600 leading-relaxed">
-            We may update this Privacy Policy from time to time to reflect changes in services, technology, or legal requirements.
-            Any updates will be published on this page along with an updated date.
-            <br />
-            <span className="text-slate-500">
-              हम समय-समय पर सेवाओं/कानूनी आवश्यकताओं के अनुसार इस नीति को अपडेट कर सकते हैं। बदलाव इस पेज पर तारीख सहित प्रकाशित किया जाएगा।
-            </span>
+        {/* ================= Ads ================= */}
+        <Section title="📢 Advertising (Google AdSense)">
+          <p>
+            We use Google AdSense to display ads. Google may use cookies (such
+            as DoubleClick cookie) to show ads based on your visits.
           </p>
 
-          <div className="mt-3 rounded-2xl border bg-white p-4 text-sm text-slate-600">
-            <div className="font-semibold text-slate-800">Last updated</div>
-            <div className="text-slate-500">
-              {/* You can replace with a real date string if you want */}
-              {new Date().toLocaleDateString()}
-            </div>
-          </div>
-        </Section>
-
-        <Section title="📬 Contact Us | संपर्क करें">
-          <p className="text-slate-600 leading-relaxed">
-            If you have any questions about this policy, feel free to contact us.
-            <br />
-            <span className="text-slate-500">
-              यदि आपको इस नीति को लेकर कोई सवाल है, तो बेझिझक हमसे संपर्क करें।
-            </span>
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+          <p className="text-sm text-slate-500">
+            Users may opt out of personalized advertising by visiting
             <a
-              href="/contact"
-              className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
+              className="text-blue-600 underline ml-1"
+              href="https://adssettings.google.com"
+              target="_blank"
             >
-              Contact Page खोलें
-            </a>
-            <a
-              href="/jobs"
-              className="inline-flex items-center justify-center rounded-xl border bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50"
-            >
-              Latest Updates देखें
-            </a>
+              Google Ads Settings
+            </a>.
+          </p>
+        </Section>
+
+        {/* ================= Third Party ================= */}
+        <Section title="👥 Third-Party Services | तृतीय-पक्ष सेवाएं">
+          <p>
+            We use trusted third-party services such as Google Analytics,
+            Google AdSense, and social sharing tools. Their data use is governed
+            by their own policies.
+          </p>
+        </Section>
+
+        {/* ================= External Links ================= */}
+        <Section title="🔗 External Links Disclaimer">
+          <p>
+            UdaanPath links to official websites (gov.in, nic.in, ac.in, etc.)
+            for verification. We are not responsible for external site content
+            or privacy practices.
+          </p>
+        </Section>
+
+        {/* ================= Children ================= */}
+        <Section title="👶 Children Information">
+          <p>
+            UdaanPath does not knowingly collect personal information from
+            children under 13. If you believe a child has provided data, please
+            contact us for removal.
+          </p>
+        </Section>
+
+        {/* ================= Rights ================= */}
+        <Section title="⚖️ Your Rights | आपके अधिकार">
+          <ul className="list-disc pl-5 space-y-1">
+            <li>Request access or deletion of your data</li>
+            <li>Unsubscribe from communications</li>
+            <li>Contact us for privacy concerns</li>
+          </ul>
+        </Section>
+
+        {/* ================= Updates ================= */}
+        <Section title="📅 Policy Updates">
+          <p>
+            This Privacy Policy may be updated from time to time. Updates will
+            be posted on this page with a revised date.
+          </p>
+          <div className="text-sm text-slate-500 mt-2">
+            Last updated: {new Date().toLocaleDateString()}
           </div>
+        </Section>
+
+        {/* ================= Contact ================= */}
+        <Section title="📬 Contact Us">
+          <p>
+            For any privacy-related questions, contact us at:
+          </p>
+          <a
+            href="mailto:support@udaanpath.com"
+            className="inline-block mt-2 text-blue-600 underline"
+          >
+            support@udaanpath.com
+          </a>
         </Section>
 
       </div>
@@ -256,9 +158,7 @@ export default function PrivacyPolicyPage() {
   );
 }
 
-/* ---------------------------
-   UI helpers
----------------------------- */
+/* ================= UI Helpers ================= */
 
 function Section({
   title,
@@ -266,62 +166,15 @@ function Section({
 }: {
   title: string;
   children: React.ReactNode;
-}) {
+})  {
   return (
     <section className="bg-white border rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
       <h2 className="text-lg sm:text-xl font-semibold text-slate-900">
         {title}
       </h2>
-      <div className="text-sm sm:text-[15px] text-slate-600 space-y-3">
+      <div className="text-sm sm:text-[15px] text-slate-600 space-y-2">
         {children}
       </div>
     </section>
-  );
-}
-
-function MiniCard({
-  title,
-  subtitle,
-  points,
-}: {
-  title: string;
-  subtitle: string;
-  points: string[];
-}) {
-  return (
-    <div className="bg-white border rounded-3xl p-6 shadow-sm">
-      <div className="text-sm font-semibold text-slate-900">{title}</div>
-      <div className="text-xs text-slate-500 mt-0.5">{subtitle}</div>
-      <ul className="mt-3 space-y-1 text-sm text-slate-600">
-        {points.map((p, idx) => (
-          <li key={`${title}-${idx}`} className="flex gap-2">
-            <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-slate-300" />
-            <span>{p}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function InfoBox({
-  title,
-  subtitle,
-  items,
-}: {
-  title: string;
-  subtitle: string;
-  items: string[];
-}) {
-  return (
-    <div className="rounded-2xl border bg-slate-50/60 p-4">
-      <div className="text-sm font-semibold text-slate-900">{title}</div>
-      <div className="text-xs text-slate-500">{subtitle}</div>
-      <ul className="mt-2 list-disc pl-5 space-y-1 text-sm text-slate-600">
-        {items.map((it, idx) => (
-          <li key={`${title}-${idx}`}>{it}</li>
-        ))}
-      </ul>
-    </div>
   );
 }

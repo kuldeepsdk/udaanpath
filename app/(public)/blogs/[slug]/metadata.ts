@@ -59,3 +59,25 @@ export async function generateMetadata(
     },
   };
 }
+
+
+
+function resolveMetaImage(image_base64: string) {
+  if (!image_base64) return "";
+
+  // Case 1: Already a URL
+  if (
+    image_base64.startsWith("http://") ||
+    image_base64.startsWith("https://")
+  ) {
+    return image_base64;
+  }
+
+  // Case 2: Already a data URI
+  if (image_base64.startsWith("data:image")) {
+    return image_base64;
+  }
+
+  // Case 3: Raw base64 string
+  return `data:image/jpeg;base64,${image_base64}`;
+}

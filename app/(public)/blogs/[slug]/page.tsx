@@ -74,9 +74,10 @@ Read full article on UdaanPath 👇`;
       {/* HERO IMAGE */}
       <div className="rounded-2xl overflow-hidden shadow-xl mb-8 sm:mb-10">
         <img
-          src={`data:image/jpeg;base64,${blog.image_base64}`}
-          className="w-full h-[240px] sm:h-[360px] lg:h-[420px] object-cover"
+          src={resolveImageSrc(blog.image_base64)}
+          className="w-full object-cover"
           alt={blog.title}
+          loading="lazy"
         />
       </div>
 
@@ -157,4 +158,25 @@ Read full article on UdaanPath 👇`;
 
     </div>
   );
+}
+
+
+function resolveImageSrc(image_base64: string) {
+  if (!image_base64) return "";
+
+  // Case 1: Already a URL
+  if (
+    image_base64.startsWith("http://") ||
+    image_base64.startsWith("https://")
+  ) {
+    return image_base64;
+  }
+
+  // Case 2: Already a data URI
+  if (image_base64.startsWith("data:image")) {
+    return image_base64;
+  }
+
+  // Case 3: Raw base64 string
+  return `data:image/jpeg;base64,${image_base64}`;
 }

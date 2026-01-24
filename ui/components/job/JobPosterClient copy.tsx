@@ -1,6 +1,6 @@
 "use client";
 
-import { toBlob } from "html-to-image";
+import { toPng } from "html-to-image";
 import { useRef, useState } from "react";
 import PosterRenderer from "@/ui/components/job/poster/PosterRenderer";
 
@@ -17,53 +17,34 @@ export default function JobPosterClient({ job }: { job: any }) {
   }
 
   /* ========================
-     CORE POSTER GENERATION
+     POSTER GENERATION
   ======================== */
-  async function generatePoster(): Promise<string | null> {
-  if (!posterRef.current) return null;
+ async function generatePoster() {
+  if (!posterRef.current) return;
 
-  try {
-    setLoading(true);
+  // Force layout calculation
+  const poster = posterRef.current;
+  const finalHeight = poster.scrollHeight;
 
-    // ✅ Wait for all images
-    const images = posterRef.current.querySelectorAll("img");
-    await Promise.all(
-      Array.from(images).map(
-        (img) =>
-          img.complete ||
-          new Promise((resolve) => {
-            img.onload = img.onerror = resolve;
-          })
-      )
-    );
+  poster.style.height = `${finalHeight}px`;
 
-  const blob = await toBlob(posterRef.current, {
-  width: 1536,
-  height: 1024,
-  pixelRatio: 2,
-  cacheBust: true,
-  backgroundColor: "#ffffff",
-});
+  const dataUrl = await toPng(poster, {
+    pixelRatio: 2,
+    quality: 1,
+    cacheBust: true,
+  });
 
+  // Cleanup (important)
+  poster.style.height = "auto";
 
-    if (!blob) throw new Error("Poster blob generation failed");
-
-    return URL.createObjectURL(blob);
-  } catch (err) {
-    console.error("Poster generation failed:", err);
-    alert("Poster generation failed");
-    return null;
-  } finally {
-    setLoading(false);
-  }
+  return dataUrl;
 }
 
 
   /* ========================
      DOWNLOAD (ALL DEVICES)
   ======================== */
-  async function downloadPoster(e: React.MouseEvent) {
-    e.preventDefault();
+  async function downloadPoster() {
     const dataUrl = await generatePoster();
     if (!dataUrl) return;
 
@@ -76,41 +57,53 @@ export default function JobPosterClient({ job }: { job: any }) {
   }
 
   /* ========================
-     COPY (NON-iOS)
+     COPY (NON-iOS ONLY)
   ======================== */
-  async function copyPoster(e: React.MouseEvent) {
-    e.preventDefault();
+  async function copyPoster() {
     const dataUrl = await generatePoster();
     if (!dataUrl) return;
 
-    const blob = await (await fetch(dataUrl)).blob();
-    if (navigator.clipboard && typeof ClipboardItem !== "undefined") {
-      await navigator.clipboard.write([
-        new ClipboardItem({ [blob.type]: blob }),
-      ]);
-      alert("Poster copied to clipboard ✅");
+    try {
+      const blob = await (await fetch(dataUrl)).blob();
+
+      if (
+        navigator.clipboard &&
+        typeof ClipboardItem !== "undefined"
+      ) {
+        await navigator.clipboard.write([
+          new ClipboardItem({ [blob.type]: blob }),
+        ]);
+        alert("Poster copied to clipboard ✅");
+      }
+    } catch (err) {
+      console.warn("Copy not supported", err);
     }
   }
 
   /* ========================
-     SHARE (NON-iOS)
+     SHARE (NON-iOS ONLY)
   ======================== */
-  async function sharePoster(e: React.MouseEvent) {
-    e.preventDefault();
+  async function sharePoster() {
     const dataUrl = await generatePoster();
     if (!dataUrl) return;
 
-    const blob = await (await fetch(dataUrl)).blob();
-    const file = new File([blob], `${job.slug}-udaanpath.png`, {
-      type: "image/png",
-    });
+    try {
+      const blob = await (await fetch(dataUrl)).blob();
+      const file = new File(
+        [blob],
+        `${job.slug}-udaanpath.png`,
+        { type: "image/png" }
+      );
 
-    if (navigator.share) {
-      await navigator.share({
-        title: job.title,
-        text: "UdaanPath – Latest Govt Job",
-        files: [file],
-      });
+      if (navigator.share) {
+        await navigator.share({
+          title: job.title,
+          text: "UdaanPath – Latest Sarkari Job",
+          files: [file],
+        });
+      }
+    } catch (err) {
+      console.warn("Share not supported", err);
     }
   }
 
@@ -123,59 +116,58 @@ export default function JobPosterClient({ job }: { job: any }) {
     <>
       {/* ===== ACTION BUTTONS ===== */}
       <div className="flex flex-wrap gap-3">
+
+        {/* Download → Always visible */}
         <button
-          type="button"
           onClick={downloadPoster}
           disabled={loading}
           className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm disabled:opacity-60"
         >
-          {loading ? "Generating..." : "Download Poster"}
+          {loading ? "Generating..." : "📥 Download Poster"}
         </button>
 
+        {/* Copy → NOT for iPhone */}
         {!isiPhone && (
           <button
-            type="button"
             onClick={copyPoster}
             disabled={loading}
             className="px-4 py-2 rounded-xl bg-slate-900 text-white text-sm disabled:opacity-60"
           >
-            Copy Poster
+            {loading ? "Generating..." : "📋 Copy Poster"}
           </button>
         )}
 
+        {/* Share → NOT for iPhone */}
         {!isiPhone && (
           <button
-            type="button"
             onClick={sharePoster}
             disabled={loading}
             className="px-4 py-2 rounded-xl bg-green-600 text-white text-sm disabled:opacity-60"
           >
-            Share Poster
+            {loading ? "Generating..." : "📤 Share Poster"}
           </button>
         )}
+
       </div>
 
-      {/* ===== iPhone Helper ===== */}
+      {/* ===== iPhone Helper Text ===== */}
       {isiPhone && (
         <p className="mt-2 text-xs text-slate-500">
-          iPhone users: Download poster, then share from Photos app.
+          iPhone users: Download poster, then use Share from Photos app.
         </p>
       )}
 
-      {/* ===== OFF-SCREEN POSTER RENDER (SAFE) ===== */}
+      {/* ===== HIDDEN POSTER RENDER ===== */}
       <div
         aria-hidden
-        style={{
-          position: "absolute",
-          top: "-20000px",
-          left: "-20000px",
-        }}
+        className="fixed inset-0 pointer-events-none opacity-0"
       >
         <div
           ref={posterRef}
           style={{
-             width: "1536px",
-            height: "1024px",
+            width: "1080px",
+            minHeight: "1350px",
+            height: "auto"
           }}
         >
           <PosterRenderer job={job} />

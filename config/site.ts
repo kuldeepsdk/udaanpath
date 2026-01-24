@@ -20,22 +20,27 @@ export const SITE_CONFIG = {
   /* =====================================================
      BRANDING & UI
   ===================================================== */
-  branding: {
-    logo: "/images/udaanpath_logo_v1.png",
-    logoDark: "/images/udaanpath_logo_v1.png",
-    favicon: "/images/udaanpath_logo_v1.png",
-    appIcon: "/images/udaanpath_logo_v1.png",
+ branding: {
+  /* Main logos (UI usage) */
+  logo: "/images/udaanpath_logo_v1.png",
+  logoDark: "/images/udaanpath_logo_v1.png",
 
-    theme: {
-      primaryColor: "#2563EB", // blue-600
-      secondaryColor: "#1E40AF", // blue-800
-      accentColor: "#16A34A", // green-600
-      backgroundLight: "#FFFFFF",
-      backgroundDark: "#0F172A",
-      textPrimary: "#111827",
-      textSecondary: "#6B7280",
-    },
+  /* Browser / App Icons */
+  favicon: "/favicon.ico",              // 👈 browser tab icon
+  appIcon: "/favicon.ico",              // 👈 future PWA / app usage
+  appleTouchIcon: "/apple-touch-icon.png",
+
+  theme: {
+    primaryColor: "#2563EB", // blue-600
+    secondaryColor: "#1E40AF", // blue-800
+    accentColor: "#16A34A", // green-600
+    backgroundLight: "#FFFFFF",
+    backgroundDark: "#0F172A",
+    textPrimary: "#111827",
+    textSecondary: "#6B7280",
   },
+},
+
 
   /* =====================================================
      SEO, OPEN GRAPH & SOCIAL PREVIEW (UPDATED)

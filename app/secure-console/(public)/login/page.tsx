@@ -9,11 +9,16 @@ export default function AdminLogin() {
   return (
     <form
       action={async (formData) => {
+        setError("");
+
         try {
           await adminLoginAction(formData);
-          // ✅ redirect handled by server
-        } catch (error){
-          setError("Invalid email or password"+error);
+          // ❗ redirect is handled by server
+        } catch (err: any) {
+          // ✅ Only show REAL auth errors
+          if (err?.message && !err.message.includes("NEXT_REDIRECT")) {
+            setError("Invalid email or password");
+          }
         }
       }}
       className="w-full max-w-sm bg-white rounded-xl shadow-lg p-6 space-y-4"

@@ -38,10 +38,11 @@ export const metadata: Metadata = {
   robots: SITE_CONFIG.seo.robots,
    /* 🔥 FAVICON / TAB ICON FIX */
   icons: {
-    icon: SITE_CONFIG.branding.favicon || "/images/udaanpath_logo_v1.png",
-    shortcut: SITE_CONFIG.branding.favicon || "/images/udaanpath_logo_v1.png",
-    apple: "/images/udaanpath_logo_v1.png",
-  },
+  icon: "/favicon.ico",
+  shortcut: "/favicon.ico",
+  apple: "/favicon.ico",
+},
+
 
   openGraph: {
     type: "website",

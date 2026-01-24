@@ -1,11 +1,32 @@
 import Link from "next/link";
 import { fetchCategoryCourses } from "@/app/actions/courses.actions";
 
-function getImageSrc(base64?: string) {
-  if (!base64) return null;
-  if (base64.startsWith("data:image")) return base64;
-  return `data:image/png;base64,${base64}`;
+
+function getImageSrc(src?: string | null) {
+  if (!src) return null;
+
+  const value = src.trim();
+
+  // ✅ Already a data URI (base64)
+  if (value.startsWith("data:image/")) {
+    return value;
+  }
+
+  // ✅ Normal URL (http / https)
+  if (/^https?:\/\//i.test(value)) {
+    return value;
+  }
+
+  // ✅ Raw base64 (no prefix)
+  // basic sanity check: base64 chars only
+  if (/^[A-Za-z0-9+/=]+$/.test(value)) {
+    return `data:image/png;base64,${value}`;
+  }
+
+  // ❌ Unknown / invalid format
+  return null;
 }
+
 
 export default async function CategoryCoursesPage({
   params,

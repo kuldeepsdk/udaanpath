@@ -1,6 +1,31 @@
 import Link from "next/link";
 import { fetchCourseDetail } from "@/app/actions/courses.actions";
 
+
+function getImageSrc(src?: string | null) {
+  if (!src) return null;
+
+  const value = src.trim();
+
+  // ✅ Already a data URI (base64)
+  if (value.startsWith("data:image/")) {
+    return value;
+  }
+
+  // ✅ Normal URL (http / https)
+  if (/^https?:\/\//i.test(value)) {
+    return value;
+  }
+
+  // ✅ Raw base64 (no prefix)
+  // basic sanity check: base64 chars only
+  if (/^[A-Za-z0-9+/=]+$/.test(value)) {
+    return `data:image/png;base64,${value}`;
+  }
+
+  // ❌ Unknown / invalid format
+  return null;
+}
 export default async function CourseDetailPage({
   params,
   searchParams,
@@ -20,51 +45,83 @@ export default async function CourseDetailPage({
 
   const prevChapter = chapters[currentIndex - 1];
   const nextChapter = chapters[currentIndex + 1];
-
+   const imageSrc = getImageSrc(course.thumbnail_base64);
   return (
     <div className="bg-slate-50 min-h-screen relative">
 
       {/* =====================
          HERO HEADER
       ====================== */}
-      <section className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-12 gap-6 items-center">
-          {course.thumbnail_base64 && (
+     <section className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 py-10">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+
+            {/* ================= IMAGE ================= */}
             <div className="md:col-span-4">
-              <img
-                src={
-                  course.thumbnail_base64.startsWith("data:image")
-                    ? course.thumbnail_base64
-                    : `data:image/png;base64,${course.thumbnail_base64}`
-                }
-                alt={course.title}
-                className="rounded-2xl shadow-md w-full object-cover"
-              />
+              {imageSrc ? (
+                <div className="relative overflow-hidden rounded-2xl shadow-md group">
+                  <img
+                    src={imageSrc}
+                    alt={course.title}
+                    className="w-full h-60 md:h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+              ) : (
+                <div className="h-60 md:h-64 rounded-2xl bg-gradient-to-br from-indigo-50 to-blue-100 flex items-center justify-center text-slate-400 text-sm">
+                  No course image
+                </div>
+              )}
             </div>
-          )}
 
-          <div className="md:col-span-8 space-y-3">
-            <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
-              Free Course
-            </span>
+            {/* ================= CONTENT ================= */}
+            <div className="md:col-span-8 space-y-4">
 
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-900">
-              {course.title}
-            </h1>
+              {/* Badges */}
+              <div className="flex flex-wrap gap-2">
+                <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
+                  Free Course
+                </span>
 
-            {course.description && (
-              <p className="text-slate-600 max-w-3xl">
-                {course.description}
-              </p>
-            )}
+                {/* future-ready category badge */}
+                {course.category && (
+                  <span className="inline-block bg-indigo-100 text-indigo-700 text-xs font-medium px-3 py-1 rounded-full">
+                    {course.category}
+                  </span>
+                )}
+              </div>
 
-            <div className="flex items-center gap-4 text-sm text-slate-500">
-              <span>📚 {chapters.length} Chapters</span>
-              <span>🎓 Self-paced learning</span>
+              {/* Title */}
+              <h1 className="text-3xl md:text-4xl font-bold text-slate-900 leading-tight">
+                {course.title}
+              </h1>
+
+              {/* Description */}
+              {course.description && (
+                <p className="text-slate-600 max-w-3xl leading-relaxed">
+                  {course.description}
+                </p>
+              )}
+
+              {/* Meta */}
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-500 pt-2">
+                <span className="flex items-center gap-1">
+                  📚 <span>{chapters.length} Chapters</span>
+                </span>
+
+                <span className="flex items-center gap-1">
+                  🎓 <span>Self-paced learning</span>
+                </span>
+
+                <span className="flex items-center gap-1">
+                  ⏱ <span>Lifetime access</span>
+                </span>
+              </div>
             </div>
+
           </div>
         </div>
       </section>
+
 
       {/* =====================
          FLOATING CHAPTER BUTTON

@@ -109,6 +109,12 @@ export default async function ProtectedLayout({
             💰 Advertisements
           </a>
           */}
+          <a
+            href="/secure-console/courses"
+            className="block px-3 py-2 rounded hover:bg-slate-800"
+          >
+            🎓 Courses
+          </a>
             <a
             href="/secure-console/organizations"
             className="block px-3 py-2 rounded hover:bg-slate-800"

@@ -1,89 +1,105 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Free Exam Form Tools Online | Photo, Signature, Crop – UdaanPath",
+  title: "Free Exam & Resume Tools Online | Photo, Signature, Resume – UdaanPath",
   description:
-    "Use free online tools for government exam forms: photo resize, signature resize, crop image, passport photo with name & date. Fast, safe & no upload.",
+    "Use free online tools by UdaanPath: resume builder, photo resize, signature resize, image crop & passport photo for government exam forms. Fast, safe & mobile friendly.",
 };
+
 const toolsSchema = {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  "name": "Free Exam Form Tools by UdaanPath",
+  "name": "Free Exam & Resume Tools by UdaanPath",
   "description":
-    "Free online tools for government exam forms including photo resize, signature resize, crop image and passport photo tools.",
+    "Free online tools for students including resume builder, photo resize, signature resize, image crop and passport photo tools for government exams.",
   "itemListElement": [
     {
       "@type": "ListItem",
       "position": 1,
-      "name": "Photo Resize Tool",
-      "url": "https://udaanpath.com/tools/photo-resize"
+      "name": "Resume Builder",
+      "url": "https://udaanpath.com/tools/resume-builder",
     },
     {
       "@type": "ListItem",
       "position": 2,
-      "name": "Signature Resize Tool",
-      "url": "https://udaanpath.com/tools/signature-resize"
+      "name": "Photo Resize Tool",
+      "url": "https://udaanpath.com/tools/photo-resize",
     },
     {
       "@type": "ListItem",
       "position": 3,
-      "name": "Image Crop Tool",
-      "url": "https://udaanpath.com/tools/image-crop"
+      "name": "Signature Resize Tool",
+      "url": "https://udaanpath.com/tools/signature-resize",
     },
     {
       "@type": "ListItem",
       "position": 4,
-      "name": "Passport Photo with Name & Date",
-      "url": "https://udaanpath.com/tools/passport-photo"
+      "name": "Image Crop Tool",
+      "url": "https://udaanpath.com/tools/image-crop",
     },
     {
       "@type": "ListItem",
       "position": 5,
+      "name": "Passport Photo with Name & Date",
+      "url": "https://udaanpath.com/tools/passport-photo",
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
       "name": "Photo & Signature Combo Tool",
-      "url": "https://udaanpath.com/tools/photo-signature"
-    }
-  ]
+      "url": "https://udaanpath.com/tools/photo-signature",
+    },
+  ],
 };
+
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Are UdaanPath tools free?",
+      "name": "Is the resume builder free?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, all exam form tools on UdaanPath are 100% free to use."
-      }
+        "text":
+          "Yes, UdaanPath resume builder is free to use. You can edit resumes online and download them easily.",
+      },
     },
     {
       "@type": "Question",
-      "name": "Do you upload my photos or documents?",
+      "name": "Are UdaanPath tools free?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. All tools work locally in your browser. Files are never uploaded."
-      }
+        "text": "Yes, all tools on UdaanPath are 100% free to use.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "Do you upload my photos or resumes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text":
+          "No. All tools work locally in your browser. Your data and files are never uploaded.",
+      },
     },
     {
       "@type": "Question",
       "name": "Can I use these tools on mobile?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, all tools are fully mobile responsive and work on Android and iPhone."
-      }
+        "text":
+          "Yes, all tools are fully mobile responsive and work on Android and iPhone.",
+      },
     },
-    {
-      "@type": "Question",
-      "name": "Which exams are supported?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "SSC, MP, Police, UPSC, Railway, Banking, Teaching and all government exams."
-      }
-    }
-  ]
+  ],
 };
 
 const TOOLS = [
+  {
+    title: "Resume Builder",
+    desc: "Create professional resumes online. Edit directly on template and download PDF.",
+    href: "/tools/resume-builder",
+  },
   {
     title: "Photo Resize Tool",
     desc: "Resize photo to exact size & KB for SSC, MP, Police, UPSC forms.",
@@ -112,11 +128,9 @@ const TOOLS = [
 ];
 
 export default function ToolsSEOPage() {
-  
-    return (
-    
+  return (
     <main className="max-w-6xl mx-auto px-4 py-8">
-         <script
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(toolsSchema) }}
       />
@@ -124,14 +138,16 @@ export default function ToolsSEOPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
+
       {/* ================== HERO ================== */}
       <h1 className="text-3xl font-bold mb-2">
-        Free Online Tools for Exam Forms
+        Free Online Tools for Students & Exam Forms
       </h1>
       <p className="text-gray-700 mb-6">
-        UdaanPath provides free online tools for government exam applications.
-        Resize photo, resize signature, crop images and create passport photos
-        easily. No signup. No upload. Works on mobile.
+        UdaanPath provides free online tools for students and government exam
+        applicants. Create resumes, resize photos, resize signatures, crop
+        images and generate passport photos easily. No signup. No upload. Works
+        on mobile.
       </p>
 
       {/* ================== TOOLS GRID ================== */}
@@ -154,64 +170,28 @@ export default function ToolsSEOPage() {
       {/* ================== SEO CONTENT ================== */}
       <section className="mt-10 text-gray-700 text-sm leading-relaxed">
         <h2 className="text-xl font-semibold mb-2">
-          Why use UdaanPath exam tools?
+          Why use UdaanPath tools?
         </h2>
         <p>
-          Students applying for SSC, MP, Police, UPSC, Railway, Bank and other
-          government exams often face issues with photo size, signature size and
-          document format. UdaanPath tools solve this problem instantly without
-          uploading files to any server.
+          UdaanPath tools help students save time while applying for exams or
+          preparing documents. From resume creation to photo and signature size
+          correction, everything works instantly without uploading files.
         </p>
 
         <p className="mt-3">
-          All tools are free, fast, mobile-friendly and privacy-safe. Your files
-          never leave your device. Thousands of students use these tools every
-          day for exam form submission.
+          All tools are free, fast, privacy-safe and designed especially for
+          Indian students and government exam aspirants.
         </p>
-      </section>
-
-      {/* ================== FAQ ================== */}
-      <section className="mt-10">
-        <h2 className="text-xl font-semibold mb-3">Frequently Asked Questions</h2>
-
-        <div className="space-y-3 text-sm text-gray-700">
-          <p>
-            <strong>Q. Are these tools free?</strong>
-            <br />
-            Yes, all tools are 100% free to use.
-          </p>
-
-          <p>
-            <strong>Q. Do you upload my photos?</strong>
-            <br />
-            No. All tools work locally in your browser. Your data is safe.
-          </p>
-
-          <p>
-            <strong>Q. Can I use these tools on mobile?</strong>
-            <br />
-            Yes, all tools are mobile responsive and work on Android/iPhone.
-          </p>
-
-          <p>
-            <strong>Q. Which exams are supported?</strong>
-            <br />
-            SSC, MP, Police, UPSC, Railway, Bank, Patwari, Teacher & all govt
-            exams.
-          </p>
-        </div>
       </section>
 
       {/* ================== INTERNAL LINK BOOST ================== */}
       <div className="mt-12 p-5 bg-blue-50 rounded-xl">
-        <h3 className="font-semibold mb-1">Tip for students</h3>
+        <h3 className="font-semibold mb-1">Student Tip</h3>
         <p className="text-sm text-gray-700">
-          Always check photo & signature size before submitting exam form.
-          Use UdaanPath tools to avoid rejection.
+          Keep your resume, photo and signature ready before applying for any
+          exam or job. UdaanPath tools help you prepare everything correctly.
         </p>
       </div>
     </main>
-
-    
   );
 }
